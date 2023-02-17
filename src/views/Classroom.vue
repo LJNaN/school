@@ -15,7 +15,7 @@
       <div class="tempControl-row2">
         <div class="tempColtrol-row2-item">
           <p>亮度</p>
-          <el-slider class="slider" v-model="equipmentControl.brightness" :show-tooltip="false" />
+          <el-slider class="slider" v-model="equipmentControl.brightness" :min="5" :max="100" :show-tooltip="false" />
         </div>
         <div class="tempColtrol-row2-item">
           <p>温度</p>
@@ -23,11 +23,19 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from "vue";
+<script setup>
+
+import { onMounted, ref, watch, computed, reactive } from "vue";
+import { useRoute } from 'vue-router'
+import { API } from '@/ktJS/API'
+import { STATE } from '@/ktJS/STATE'
+
+
+const route = useRoute()
+const classRoomName = route.query?.id || ''
 
 const equipmentControl = ref({
   curtain: true,
@@ -35,6 +43,31 @@ const equipmentControl = ref({
   brightness: 100,
   temperature: 26
 })
+
+if (classRoomName) {
+  API.classRoom.currentClassRoomName = classRoomName
+  if(API.classRoom.info.name != classRoomName) {
+    API.classRoom.info = STATE.classRoomInfo.find(e => e.name === classRoomName)
+  }
+  
+  watch(() => JSON.parse(JSON.stringify(equipmentControl.value)), (newData, oldData) => {
+    if (oldData) {
+      if (newData.curtain != oldData.curtain) API.classRoom.curtain(newData.curtain)
+      if (newData.screen != oldData.screen) API.classRoom.screen(newData.screen)
+      if (newData.brightness != oldData.brightness) API.classRoom.brightness(newData.brightness)
+      if (newData.temperature != oldData.temperature) API.classRoom.temperature(newData.temperature)
+    } else {
+      // API.classRoom.curtain(newData.curtain)
+      API.classRoom.screen(newData.screen)
+      API.classRoom.brightness(newData.brightness)
+      API.classRoom.temperature(newData.temperature)
+    }
+  }, {
+    immediate: true,
+    deep: true
+  })
+}
+
 
 onMounted(() => {
 

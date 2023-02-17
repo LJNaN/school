@@ -6,6 +6,9 @@
 
 <script setup lang="ts">
 import Scene from '@/views/Scene.vue'
+import router from '@/router/index'
+
+router.push("/")
 </script>
 
 

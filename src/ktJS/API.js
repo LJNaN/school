@@ -1,6 +1,9 @@
 import { STATE } from './STATE.js'
 import { CACHE } from './CACHE.js'
+import Shader from './shader.js'
 import router from '@/router/index'
+import Utils from './utils/index'
+
 
 /**
  * 相机动画（传指定state）
@@ -184,38 +187,248 @@ function initFloor() {
 /**
  * shader测试用
  */
-const initShaderBox = {
-  uniforms: {
-    u_time: { value: 0.0 }
+const shader = {
+  time: {
+    value: 0
   },
-  initShaderBoxFunc: () => {
-    const geo = new Bol3D.BoxBufferGeometry(20, 20, 20)
-    const tempGeo = STATE.buildOutLine[0].geometry.clone()
+  isStart: false,
+  StartTime: {
+    value: 0
+  },
 
-    const shader = new Bol3D.ShaderMaterial({
-      uniforms: initShaderBox.uniforms,
-      vertexShader: `
-        void main() {
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  setCityMaterial(object) {
+    
+    // 确定oject的geometry的box size
+    object.geometry.computeBoundingBox();
+    object.geometry.computeBoundingSphere();
+
+    const { geometry } = object;
+
+    // 获取geometry的长宽高 中心点
+    const { center, radius } = geometry.boundingSphere;
+    
+
+    const { max, min } = geometry.boundingBox;
+
+    const size = new Bol3D.Vector3(
+      max.x - min.x,
+      max.y - min.y,
+      max.z - min.z
+      )
+      
+    console.log('size: ', size);
+
+    Utils.forMaterial(object.material, (material) => {
+      // material.opacity = 0.6;
+      material.transparent = true;
+      material.color.setStyle("#1B3045");
+
+      material.onBeforeCompile = (shader) => {
+        shader.uniforms.time = this.time;
+        shader.uniforms.uStartTime = this.StartTime;
+
+        // 中心点
+        shader.uniforms.uCenter = {
+          value: center
         }
-      `,
-      fragmentShader: `
-        uniform float u_time;
-        void main() {
-          gl_FragColor = vec4(0.14,0.5,0.95,abs(sin(u_time)));
+
+        // geometry大小
+        shader.uniforms.uSize = {
+          value: size
         }
-      `
+
+        shader.uniforms.uMax = {
+          value: max
+        }
+
+        shader.uniforms.uMin = {
+          value: min
+        }
+        shader.uniforms.uTopColor = {
+          value: new Bol3D.Color('#001c38')
+        }
+
+        // 效果开关
+        shader.uniforms.uSwitch = {
+          value: new Bol3D.Vector3(
+            0, // 扩散
+            0, // 左右横扫
+            0 // 向上扫描
+          )
+        };
+        // 扩散
+        shader.uniforms.uDiffusion = {
+          value: new Bol3D.Vector3(
+            0, // 0 1开关
+            120, // 范围
+            600 // 速度
+          )
+        };
+        // 扩散中心点
+        shader.uniforms.uDiffusionCenter = {
+          value: new Bol3D.Vector3(
+            0, 0, 0
+          )
+        };
+
+        // 扩散中心点
+        shader.uniforms.uFlow = {
+          value: new Bol3D.Vector3(
+            1, // 0 1开关
+            30, // 速度
+            10 // 范围
+          )
+        };
+
+        // 效果颜色
+        shader.uniforms.uColor = {
+          value: new Bol3D.Color("#5588aa")
+        }
+        // 效果颜色
+        shader.uniforms.uFlowColor = {
+          value: new Bol3D.Color("#63c9e1")
+        }
+
+
+        // 效果透明度
+        shader.uniforms.uOpacity = {
+          value: 1
+        }
+
+        // 效果透明度
+        shader.uniforms.uRadius = {
+          value: radius
+        }
+        shader.uniforms.uModRange = { value: 10 } // 范围
+        shader.uniforms.uModWidth = { value: 1.5 } // 范围
+
+        /**
+         * 对片元着色器进行修改
+         */
+        const fragment = `
+          // float distanceTo(vec2 src, vec2 dst) {
+          //   float dx = src.x - dst.x;
+          //   float dy = src.y - dst.y;
+          //   float dv = dx * dx + dy * dy;
+          //   return sqrt(dv);
+          // }
+
+          float lerp(float x, float y, float t) {
+            return (1.0 - t) * x + t * y;
+          }
+
+          vec3 getGradientColor(vec3 color1, vec3 color2, float index) {
+            float r = lerp(color1.r, color2.r, index);
+            float g = lerp(color1.g, color2.g, index);
+            float b = lerp(color1.b, color2.b, index);
+            return vec3(r, g, b);
+          }
+
+
+          varying vec4 vPositionMatrix;
+          varying vec3 vPosition;
+
+          uniform float time;
+          // 扩散参数
+          uniform float uRadius;
+          uniform float uOpacity;
+          uniform float uModRange;
+          uniform float uModWidth;
+          // 初始动画参数
+          uniform float uStartTime; 
+
+          uniform vec3 uMin;
+          uniform vec3 uMax;
+          uniform vec3 uSize;
+          uniform vec3 uFlow;
+          uniform vec3 uColor;
+          uniform vec3 uCenter;
+          uniform vec3 uSwitch;
+          uniform vec3 uTopColor;
+          uniform vec3 uFlowColor;
+          uniform vec3 uDiffusion; 
+          uniform vec3 uDiffusionCenter;
+
+
+          void main() {
+        `;
+        const fragmentColor = `
+          vec3 distColor = outgoingLight;
+          float dstOpacity = diffuseColor.a;
+
+          float indexMix = vPosition.y / (uSize.y * 0.6);
+          distColor = mix(distColor, uTopColor, indexMix);
+
+       
+          // 流动效果{
+          float dTime = mod(time * uFlow.y, uSize.y); 
+          // 流动范围
+          float topY = vPosition.y + uFlow.z;
+          if (dTime > vPosition.y && dTime < topY) {
+            // 颜色渐变 
+            float dIndex = sin((topY - dTime) / uFlow.z * PI);
+            distColor = mix(distColor, uFlowColor,  dIndex); 
+          }
+          gl_FragColor = vec4(distColor, dstOpacity * uStartTime);
+        `;
+        shader.fragmentShader = shader.fragmentShader.replace("void main() {", fragment)
+        shader.fragmentShader = shader.fragmentShader.replace("gl_FragColor = vec4( outgoingLight, diffuseColor.a );", fragmentColor);
+
+
+
+        /**
+         * 对顶点着色器进行修改
+         */
+        const vertex = `
+          varying vec4 vPositionMatrix;
+          varying vec3 vPosition;
+          uniform float uStartTime;
+          void main() {
+            vPositionMatrix = projectionMatrix *  vec4(position, 1.0);
+            vPosition = position;
+        `
+        const vertexPosition = `
+          vec3 transformed = vec3(position.x, position.y * uStartTime, position.z);
+        `
+        // 
+
+        shader.vertexShader = shader.vertexShader.replace("void main() {", vertex);
+        shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", vertexPosition);
+      }
     })
-    shader.transparent = true
-    const box = new Bol3D.Mesh(geo, shader)
-    box.position.set(20, 20, 20)
-
-
-    STATE.buildOutLine[0].material = shader
-    CACHE.container.attach(box)
   },
-  shaderBoxRender: (cb) => {
-    initShaderBox.uniforms.u_time.value = cb.elapsedTime
+
+  uniform: {
+    u_color: { value: new Bol3D.Color("#5588aa") },
+    u_tcolor: { value: new Bol3D.Color("#ffffff") },
+    u_r: { value: 0.25 },
+    u_length: { value: 10 }, //扫过区域
+    u_height: { value: 30.5 },
+    u_time: { value: 0 }
+  },
+
+  initShader: function () {
+    this.isStart = true
+    const model = STATE.sceneList.peilou.children[0]
+    this.setCityMaterial(model)
+    console.log('model: ', model);
+
+  },
+
+  shaderAnimate: function (singleFrameTime) {
+    if (singleFrameTime > 1) return false
+    this.time.value += singleFrameTime
+
+    
+    // 启动
+    if (this.isStart) {
+      this.StartTime.value += singleFrameTime * 0.5
+      if (this.StartTime.value >= 1) {
+        this.StartTime.value = 1;
+        this.isStart = false;
+      }
+    }
+
   }
 }
 
@@ -320,21 +533,24 @@ function initInnerFloor(floor, duration = 800) {
     }
   })
 
-  
+
   const cameraState = {
     position: { x: -56.14742099558634, y: 40.95011072324698, z: -33.5855 },
     target: { x: -56.12479392225676, y: 20, z: -48.3605 }
   }
   cameraAnimation({ cameraState, duration })
-  
+
   // 初始化时，也有可能是从教室返回到这里，所以要对一些场景的属性做初始化
   STATE.sceneList.peilou.visible = true
+  STATE.sceneList.peilouLine.visible = true
   STATE.sceneList.school.visible = true
   STATE.sceneList.road.visible = true
+  STATE.sceneList.tree.visible = true
+
   const classRoomList = ['309', '310', '311', '312', '316', '317', '318', '319']
   classRoomList.forEach(e => {
     const classRoom = STATE.sceneList[e]
-    if(classRoom) classRoom.visible = false
+    if (classRoom) classRoom.visible = false
   })
 
   removeAllPopup()
@@ -387,26 +603,22 @@ function enterClassRoom(classRoomName) {
   removeAllPopup()
   STATE.sceneList.mainBuilding.visible = false
 
-  const classRoom = STATE.sceneList[classRoomName]
+  const classRoomModel = STATE.sceneList[classRoomName]
 
-  classRoom.visible = true
-  CACHE.container.orbitCamera.position.set(-0.07189709141151583, 12.475628953940772, 12.671922)
-  CACHE.container.orbitControls.target.set(0, 0, 0)
+  classRoomModel.visible = true
+  CACHE.container.orbitCamera.position.set(-0.0485, 12.5571, 11.7318)
+  CACHE.container.orbitControls.target.set(-0.012, 2, -0.8)
 
-  
-  classRoom.traverse(child => {
-    if (child.name.includes('jiaoshi19_')) child.visible = false
-    if (child.name.includes('jiaoshi20_')) {
-      child.material.transparent = true
-      child.material.opacity = 0.5
-    }
-  })
+
+  classRoom.hiddenRoof(classRoomName)
 
   STATE.sceneList.peilou.visible = false
+  STATE.sceneList.peilouLine.visible = false
   STATE.sceneList.school.visible = false
   STATE.sceneList.road.visible = false
+  STATE.sceneList.tree.visible = false
 
-  router.push("/classroom")
+  router.push("/classroom?id=" + classRoomName)
 }
 
 /**
@@ -451,12 +663,10 @@ function backToOut() {
 }
 
 const render = () => {
-  let oldElapsedTime = 0
-  let singleFrameTime = 0
-  // singleFrameTime = STATE.clock.getDelta();
   // const elapsedTime = STATE.clock.getElapsedTime()
+  const singleFrameTime = STATE.clock.getDelta()
 
-  // initShaderBox.shaderBoxRender({elapsedTime})
+  shader.shaderAnimate(singleFrameTime)
 
   requestAnimationFrame(render);
 };
@@ -505,25 +715,93 @@ function dbRightClick() {
 }
 
 /**
- * 
+ * 获取世界坐标的状态并赋值
  * @param {object} obj 模型
  */
 function getWorldState(obj) {
   const scale = obj.getWorldScale(new Bol3D.Vector3())
   const position = obj.getWorldPosition(new Bol3D.Vector3())
   const quaternion = obj.getWorldQuaternion(new Bol3D.Quaternion())
-  obj.position.set(position.x, position.y, position.z)
-  obj.scale.set(scale.x, scale.y, scale.z)
-  obj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
+  return { position, scale, quaternion }
+}
+
+
+/**
+ * 教室的状态和信息
+ */
+
+const classRoom = {
+  currentClassRoomName: '',
+  info: {},
+
+  hiddenRoof: function (classRoomName) {
+    const info = STATE.classRoomInfo.find(e => e.name === classRoomName)
+    this.info = info
+
+    STATE.sceneList[classRoomName].traverse(child => {
+      if (child.isMesh) {
+        if (this.info.model.roof.includes(child.name)) {
+          child.visible = false
+        } else if (this.info.model.light.includes(child.name)) {
+          child.material.transparent = true
+          child.material.opacity = 0.5
+        }
+      }
+    })
+  },
+
+  curtain: function (isOpen) {
+    STATE.sceneList[this.currentClassRoomName].traverse(child => {
+      if (child.isMesh) {
+        if (this.info.model.curtain.includes(child.name)) {
+          new Bol3D.TWEEN.Tween(child.scale)
+            .to({
+              z: isOpen ? this.info.model.curtainScale[0] : this.info.model.curtainScale[1]
+            }, 500)
+            .start()
+        }
+      }
+    })
+  },
+
+
+  screen: function (isOpen) {
+    STATE.sceneList[this.currentClassRoomName].traverse(child => {
+      if (child.isMesh) {
+        if (this.info.model.screen.includes(child.name)) {
+          child.material.color.r = isOpen ? 1 : 0
+          child.material.color.g = isOpen ? 1 : 0
+          child.material.color.b = isOpen ? 1 : 0
+        }
+      }
+    })
+  },
+
+  brightness: function (val) {
+    STATE.sceneList[this.currentClassRoomName].traverse(child => {
+      if (child.isMesh) {
+        if (!this.info.model.screen.includes(child.name)) {
+          child.material.color.r = val * 0.01
+          child.material.color.g = val * 0.01
+          child.material.color.b = val * 0.01
+        }
+      }
+    })
+  },
+
+  temperature: function (val) {
+
+  }
 }
 
 export const API = {
   loadGUI,
   initFloor,
-  initShaderBox,
   initMainBuilding,
   initInnerFloor,
   dbRightClick,
   getWorldState,
+  shader,
+  classRoom,
   render
 }

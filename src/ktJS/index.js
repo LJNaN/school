@@ -10,7 +10,6 @@ export const sceneOnLoad = ({ domElement, callback }) => {
     publicPath: STATE.PUBLIC_PATH,
     container: domElement,
     viewState: 'orbit',
-    bloomEnabled: false,
     cameras: {
       orbitCamera: {
         position: [STATE.initialState.position.x, STATE.initialState.position.y, STATE.initialState.position.z],
@@ -21,7 +20,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
     },
     renderer: {
       alpha: true, // 开启/关闭背景透明（默认为false）
-      logarithmicDepthBuffer: true, // 解决z精度造成的重叠闪面（默认true）
+      logarithmicDepthBuffer: false, // 解决z精度造成的重叠闪面（默认true）
       antialias: true, // 抗锯齿，默认开启
       precision: 'highp', // shader浮点精度，默认highp
     },
@@ -35,7 +34,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         maxPolarAngle: Math.PI,
         minPolarAngle: -Math.PI,
         enableDamping: true,
-        dampingFactor: 0.05,
+        dampingFactor: 0.5,
       }
     },
     lights: {
@@ -63,19 +62,26 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       }
     },
     modelUrls: [
-      // '/model/xxdx-v1.glb',
-      // '/model/xxfc-v2.glb',
-      // '/model/xxfz-v3.glb',
-      '/model/cj-kj.glb',
+      '/model/xxshu.glb',
+      '/model/xxfc.glb',
+      '/model/xxdx.glb',
+      '/model/xxfz.glb',
+      // '/model/cj-kj.glb',
       '/model/classroom/309.glb',
-      // '/model/classroom/310.glb',
-      '/model/classroom/311.glb',
+      '/model/classroom/310.glb',
+      // '/model/classroom/311.glb',
       // '/model/classroom/312.glb',
       // '/model/classroom/316.glb',
       // '/model/classroom/317.glb',
       // '/model/classroom/318.glb',
       // '/model/classroom/319.glb'
     ],
+    bloomEnabled: false, // 需要开启，默认为false
+    // bloom: {
+    //   bloomStrength: 20, // 强度
+    //   threshold: 5, // 阈值
+    //   bloomRadius: 25, // 半径
+    // },
     // hdrUrls: ['/hdr/HDR.hdr'],
     enableShadow: true,
     antiShake: false,
@@ -108,87 +114,147 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
     onProgress: (model) => {
 
+      // 教室
       if (['309', '310', '311', '312', '316', '317', '318', '319'].includes(model.name)) {
         STATE.sceneList[model.name] = model
         model.scale.set(40, 40, 40)
         model.visible = false
       }
 
-      if (model.name === 'cj-kj') {
+      // 树
+      if (model.name === 'xxshu') {
+        model.traverse(child => {
+          if (child.isMesh) {
+            const worldState = API.getWorldState(child)
+            child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+            child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+            child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+
+            STATE.sceneList.tree.add(child.clone())
+            child.visible = false
+          }
+        })
+        container.attach(STATE.sceneList.tree)
+
+      } else if (model.name === 'xxdx') {
+        model.traverse(child => {
+          if (child.isMesh) {
+            if (child.name === 'Plane001') {
+              // 地面
+              const worldState = API.getWorldState(child)
+              child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+              child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+              child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+              
+              STATE.sceneList.floor = child.clone()
+              child.visible = false
+
+            } else {
+              // 配楼
+              const worldState = API.getWorldState(child)
+              child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+              child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+              child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+              
+              STATE.sceneList.peilou.add(child.clone())
+              child.material.transparent = true
+              child.visible = false
+
+              // 线框
+              const edges = new Bol3D.EdgesGeometry( child.geometry.clone() );
+              const line = new Bol3D.LineSegments( edges, new Bol3D.LineBasicMaterial( { color: 0x65cae2 } ) );
+              line.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+              line.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+              line.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+              line.material.transparent = true
+              line.material.opacity = 0.1
+              STATE.sceneList.peilouLine.add(line)
+            }
+          }
+        })
+
+        
+        // 主教学楼
+      } else if (model.name === 'xxfc') {
         model.traverse(child => {
           if (child.isMesh) {
             child.material.transparent = true
-          }
 
-          if (child.name === 'zhizaojituan_201') {
-            child.name = 'peilou'
-            API.getWorldState(child)
-            STATE.sceneList.peilou.add(child.clone())
-            container.attach(STATE.sceneList.peilou)
-            child.visible = false
-
-          } else if (child.name === 'Plane001') {
-            child.name = 'floor'
-            API.getWorldState(child)
-            STATE.sceneList.floor = child.clone()
-            container.attach(STATE.sceneList.floor)
-            child.visible = false
-
-          } else if (child.name === 'dx10') {
-            child.name = 'road'
-            API.getWorldState(child)
-            STATE.sceneList.road = child.clone()
-            container.attach(STATE.sceneList.road)
-            child.visible = false
-
-          } else {
-            if (child.isMesh) {
-              let isFind = false
-
-              for (let i = 0; i < STATE.floorList.length; i++) {
-                if (STATE.floorList[i].model.includes(child.name)) {
-                  child.userData.floor = STATE.floorList[i].floor
-                  child.userData.type = '主楼'
-                  API.getWorldState(child)
-                  STATE.sceneList.mainBuilding.add(child.clone())
-                  child.visible = false
-                  isFind = true
-                  break
-                }
-              }
-
-              if (!isFind) {
-                API.getWorldState(child)
-                STATE.sceneList.school.add(child.clone())
+            for (let i = 0; i < STATE.floorList.length; i++) {
+              if (STATE.floorList[i].model.includes(child.name)) {
+                child.userData.floor = STATE.floorList[i].floor
+                child.userData.type = '主楼'
+                const worldState = API.getWorldState(child)
+                child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+                child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+                child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+                
+                STATE.sceneList.mainBuilding.add(child.clone())
                 child.visible = false
+                break
               }
             }
           }
         })
-        container.attach(STATE.sceneList.mainBuilding)
-        container.attach(STATE.sceneList.school)
 
         STATE.sceneList.mainBuilding.children.forEach(e => {
           STATE.outLineObjects.push(e)
           STATE.outClickObjects.push(e)
         })
+        container.attach(STATE.sceneList.mainBuilding)
+
+      } else if (model.name === 'xxfz') {
+        model.traverse(child => {
+          if (child.isMesh) {
+            if (child.name === 'lu') {
+              
+              // 路
+              const worldState = API.getWorldState(child)
+              child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+              child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+              child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+              
+              STATE.sceneList.road = child.clone()
+              child.visible = false
+
+              // 多余的路
+            } else if (child.name === 'dx10') {
+              child.visible = false
+
+              // 学校主体
+            } else {
+              const worldState = API.getWorldState(child)
+              child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+              child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+              child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+  
+              STATE.sceneList.school.add(child.clone())
+              child.visible = false
+            }
+          }
+        })
+        container.attach(STATE.sceneList.school)
       }
     },
 
     onLoad: (evt) => {
-      router.push("/")
+      container.attach(STATE.sceneList.floor)
+      container.attach(STATE.sceneList.road)
+      container.attach(STATE.sceneList.peilou)
+      container.attach(STATE.sceneList.peilouLine)
 
+      evt.sceneList = STATE.sceneList
       CACHE.container = evt
       window.container = evt
       CACHE.container.outlineObjects = STATE.outLineObjects
       CACHE.container.clickObjects = STATE.outClickObjects
       CACHE.container.loadingBar.style.visibility = 'hidden'
 
-
+      
       // API.loadGUI()
       // API.initFloor()
-      // API.initShaderBox.initShaderBoxFunc()
-
+      
+      API.shader.initShader()
 
       API.render()
       API.dbRightClick()
@@ -207,7 +273,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         STATE.currentScene = 'mainBuilding'
         API.initMainBuilding()
 
-      // 在主楼点到具体单楼层
+        // 在主楼点到具体单楼层
       } else if (firstObject.userData.type === '主楼' && STATE.currentScene === 'mainBuilding') {
         STATE.currentScene = firstObject.userData.floor
         API.initInnerFloor(firstObject.userData.floor)
