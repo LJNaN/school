@@ -161,14 +161,14 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.visible = false
 
               // 线框
-              const edges = new Bol3D.EdgesGeometry( child.geometry.clone() );
-              const line = new Bol3D.LineSegments( edges, new Bol3D.LineBasicMaterial( { color: 0x65cae2 } ) );
-              line.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
-              line.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
-              line.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-              line.material.transparent = true
-              line.material.opacity = 0.1
-              STATE.sceneList.peilouLine.add(line)
+              // const edges = new Bol3D.EdgesGeometry( child.geometry.clone() );
+              // const line = new Bol3D.LineSegments( edges, new Bol3D.LineBasicMaterial( { color: 0x65cae2 } ) );
+              // line.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+              // line.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+              // line.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+              // line.material.transparent = true
+              // line.material.opacity = 0.1
+              // STATE.sceneList.peilouLine.add(line)
             }
           }
         })
@@ -254,7 +254,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       // API.loadGUI()
       // API.initFloor()
       
-      API.shader.initShader()
+      API.shader.peilou.initShader()
 
       API.render()
       API.dbRightClick()
