@@ -76,12 +76,12 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       // '/model/classroom/318.glb',
       // '/model/classroom/319.glb'
     ],
-    bloomEnabled: false, // 需要开启，默认为false
-    // bloom: {
-    //   bloomStrength: 20, // 强度
-    //   threshold: 5, // 阈值
-    //   bloomRadius: 25, // 半径
-    // },
+    bloomEnabled: true, // 需要开启，默认为false
+    bloom: {
+      bloomStrength: 1.5, // 强度
+      threshold: 0, // 阈值
+      bloomRadius: 0.1, // 半径
+    },
     // hdrUrls: ['/hdr/HDR.hdr'],
     enableShadow: true,
     antiShake: false,
@@ -147,6 +147,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
               
               STATE.sceneList.floor = child.clone()
+              STATE.outClickObjects.push(STATE.sceneList.floor)
               child.visible = false
 
             } else {
@@ -255,6 +256,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       // API.initFloor()
       
       API.shader.peilou.initShader()
+      API.flyLines.initFlyLines()
 
       API.render()
       API.dbRightClick()
@@ -264,8 +266,9 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
   const events = new Bol3D.Events(container)
   events.ondbclick = (e) => {
-
+    
     if (e.objects.length) {
+      console.log('e: ', e.objects[0].point);
       const firstObject = e.objects[0].object
 
       // 在外场景点到主楼

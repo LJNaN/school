@@ -418,11 +418,92 @@ function backToOut() {
   cameraAnimation({ cameraState })
 }
 
+/**
+ * 绘制飞线
+ * @param {*} path 三维点路径
+ * @param {*} imgUrl 贴图路径
+ * @param {*} speed 速度
+ * @param {*} cut 分段数
+ * @param {*} radius 管道半径
+ * @param {*} repeat 重复次数
+ */
+function createFlyLines({ path = [], imgUrl = '', flowDirection = 'x', cut = 200, speed = 0.01, radius = 1, repeat = 1, type = 'fly' }) {
+  const textureTest = new Bol3D.TextureLoader().load(imgUrl); // 流动材质
+  const curveArr = []
+  for (let i = 0, len = path.length; i < len; i += 3) {
+    const temp = new Bol3D.Vector3(path[i], path[i + 1], path[i + 2])
+    curveArr.push(temp)
+  }
+
+  const curve = new Bol3D.CatmullRomCurve3(curveArr, false, 'catmullrom', 0.0)
+  curve.arcLengthDivisions = 3
+  
+
+  const tubeGeometry = new Bol3D.TubeGeometry(curve, 64, radius);
+  textureTest.wrapS = Bol3D.RepeatWrapping;
+  textureTest.wrapT = Bol3D.RepeatWrapping;
+  const tubeMaterial = new Bol3D.MeshBasicMaterial({
+    alphaToCoverage: true,
+    map: textureTest,
+    transparent: true,
+    side: 2
+  });
+  
+  tubeMaterial.map.repeat[flowDirection] = repeat
+
+  const tube = new Bol3D.Mesh(tubeGeometry, tubeMaterial);
+  tube.userData = { path, imgUrl, flowDirection, cut, radius, repeat, speed, type }
+
+
+
+  return tube
+}
+
+/**
+ * 加载飞线
+ */
+const flyLines = {
+  flyLines: [],
+  initFlyLines() {
+    const flyLineGroup = new Bol3D.Group()
+    const carLineGroup = new Bol3D.Group()
+    for (let i = 0; i < STATE.flyLineConfig.length; i++) {
+      const flyLine = createFlyLines(STATE.flyLineConfig[i])
+      this.flyLines.push(flyLine)
+
+      if (STATE.flyLineConfig[i].type === 'fly') {
+        flyLineGroup.add(flyLine)
+      } else if (STATE.flyLineConfig[i].type === 'car') {
+        carLineGroup.add(flyLine)
+      }
+      CACHE.container.addBloom(flyLine)
+    }
+
+    STATE.sceneList.flyLine = flyLineGroup
+    STATE.sceneList.carLine = carLineGroup
+    CACHE.container.attach(STATE.sceneList.flyLine)
+    CACHE.container.attach(STATE.sceneList.carLine)
+
+
+  },
+  animation() {
+    for (let i = 0; i < this.flyLines.length; i++) {
+      const direction = this.flyLines[i].userData.flowDirection
+      const speed = this.flyLines[i].userData.speed
+      this.flyLines[i].material.map.offset[direction] -= speed
+    }
+  }
+}
+
+
+
+
 const render = () => {
   // const elapsedTime = STATE.clock.getElapsedTime()
   const singleFrameTime = STATE.clock.getDelta()
 
   shader.peilou.shaderAnimate(singleFrameTime)
+  flyLines.animation()
 
   requestAnimationFrame(render);
 };
@@ -559,5 +640,6 @@ export const API = {
   getWorldState,
   shader,
   classRoom,
+  flyLines,
   render
 }

@@ -69,9 +69,12 @@ const sceneList = {
   school: new Bol3D.Group(), // 学校
   tree: new Bol3D.Group(), // 树
   floor: null, // 纯色地板
-  road: null // 路
+  road: null, // 路
+  flyLine: null, // 竖直飞线
+  carLine: null // 车流飞线
 }
 
+// 教室信息
 const classRoomInfo = [{
   name: '309',
   model: {
@@ -96,6 +99,216 @@ const classRoomInfo = [{
   }
 }]
 
+// 场景流线
+// 前12个是往上飞的
+// 后面的是车流线
+const flyLineConfig = [
+  {
+    type: 'fly',
+    path: [
+      653, 0, -582,
+      653, 600, -582
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      255, 0, -586,
+      255, 600, -586
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      -88, 0, -588,
+      -88, 600, -588
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      -528, 0, -582,
+      -528, 600, -582
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      -540, 0, -298,
+      -540, 600, -298
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      -553, 0, 222,
+      -553, 600, 222
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      -571, 0, 589,
+      -571, 600, 589
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      -224, 0, 612,
+      -224, 600, 612
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      188, 0, 615,
+      188, 600, 615
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      605, 0, 618,
+      605, 600, 618
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      631, 0, 217,
+      631, 600, 217
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'fly',
+    path: [
+      639, 0, -184,
+      639, 600, -184
+    ],
+    radius: 1,
+    imgUrl: '/assets/3d/img/flyline1.png',
+    flowDirection: 'x',
+    repeat: 4,
+    speed: 0.005
+  }, {
+    type: 'car',
+    path: [
+      -771, 0, -238,
+      287, 0, -239,
+      289, 0, -801
+    ],
+    radius: 0.9,
+    imgUrl: '/assets/3d/img/flyline2.png',
+    flowDirection: 'x',
+    repeat: 20,
+    speed: 0.02
+  }, {
+    type: 'car',
+    path: [
+      993, 0, -242,
+      287, 0, -239,
+      287, 0, -8,
+      132, 0, -12
+    ],
+    radius: 0.9,
+    imgUrl: '/assets/3d/img/flyline2.png',
+    flowDirection: 'x',
+    repeat: 25,
+    speed: 0.02
+  }, {
+    type: 'car',
+    path: [
+      955, 0, -12,
+      287, 0, -8,
+      286, 0, 227,
+      -275, 0, 234,
+      -280, 0, 30
+    ],
+    radius: 0.9,
+    imgUrl: '/assets/3d/img/flyline2.png',
+    flowDirection: 'x',
+    repeat: 30,
+    speed: 0.02
+  }, {
+    type: 'car',
+    path: [
+      -777, 0, 24,
+      -149, 0, 26
+    ],
+    radius: 0.9,
+    imgUrl: '/assets/3d/img/flyline2.png',
+    flowDirection: 'x',
+    repeat: 20,
+    speed: 0.02
+  }, {
+    type: 'car',
+    path: [
+      287, 0, 852,
+      286, 0, 227
+    ],
+    radius: 0.9,
+    imgUrl: '/assets/3d/img/flyline2.png',
+    flowDirection: 'x',
+    repeat: 20,
+    speed: 0.02
+  }, {
+    type: 'car',
+    path: [
+      -274, 0, 229,
+      -274, 0, 851
+    ],
+    radius: 0.9,
+    imgUrl: '/assets/3d/img/flyline2.png',
+    flowDirection: 'x',
+    repeat: 15,
+    speed: 0.02
+  }]
+
 
 export const STATE = {
   initialState, // 初始状态
@@ -111,5 +324,6 @@ export const STATE = {
   popupList, // 弹窗数组
   sceneList, // 场景模型数组
   classRoomPopup,  // 教室弹窗
-  classRoomInfo  // 教室的信息
+  classRoomInfo,  // 教室的信息
+  flyLineConfig, // 场景流线
 }
