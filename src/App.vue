@@ -1,14 +1,15 @@
 <template>
-  <Scene/>
-  <div class="bg"></div>
-  <router-view style="z-index: 1"></router-view>
+  <Scene />
+  <div class="bg">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script setup lang="ts">
-import Scene from '@/views/Scene.vue'
-import router from '@/router/index'
-
-router.push("/")
+import Scene from "@/views/Scene.vue";
+import router from "@/router/index";
+import Home from "@/views/Home.vue";
+router.push("/");
 </script>
 
 
@@ -17,7 +18,7 @@ router.push("/")
   width: 100vw;
   height: 100vh;
   background-color: #999;
-  color: #FFF;
+  color: #fff;
   pointer-events: none;
 }
 
@@ -25,7 +26,8 @@ router.push("/")
   position: fixed;
   height: 100vh;
   width: 100vw;
-  /* z-index: 1;
-  background: url('@/assets/img/首页.png') center / 100% 100% no-repeat; */
+  z-index: 2;
+  background: url("../public/assets/2d/img/遮挡@2x.png");
+  background-size: 100% 100%;
 }
 </style>

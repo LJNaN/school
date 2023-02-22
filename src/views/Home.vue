@@ -1,7 +1,11 @@
-<script setup lang="ts">
+<script setup >
 import { onMounted, ref } from "vue";
 import * as echarts from "echarts";
-
+import Head from "@/components/Head.vue";
+import Foot from "@/components/Foot.vue"
+import IconTitle from '@/components/IconTitle.vue'
+import SmartSecurity_L from "@/components/SmartSecurity_L.vue";
+import SmartSecurity_R from "@/components/SmartSecurity_R.vue";
 const leftRef = ref(null);
 
 onMounted(() => {
@@ -37,23 +41,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="home" v-if="false">
-    <div ref="leftRef" class="left"></div>
+  <div class="home">
+    <Head></Head>
+    <Foot></Foot>
+    <SmartSecurity_L></SmartSecurity_L>
+    <SmartSecurity_R></SmartSecurity_R>
+    <IconTitle></IconTitle>
   </div>
 </template>
 
 <style scoped>
 .home {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 2;
   position: absolute;
-}
-.left {
-  width: 500px;
-  height: 500px;
-  background-color: rgba(133, 133, 133, 0.5);
-  pointer-events: auto;
-  
+  pointer-events: all;
 }
 </style>

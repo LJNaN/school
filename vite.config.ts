@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig({
   base: './',
   plugins: [vue()],
-  resolve:{alias:[{find:"@",replacement:path.resolve(__dirname,"./src")}, ]},
+  resolve: { alias: [{ find: "@", replacement: path.resolve(__dirname, "./src") },] },
   server: {
     port: 5173,
     open: true,
@@ -18,5 +18,14 @@ export default defineConfig({
         rewrite: path => path.replace(/^\/api/, '')
       },
     }
-  }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 两种方式都可以
+        additionalData: '@import "@/shared/index.scss";'
+        // additionalData: '@use "@/assets/scss/global.scss" as *;'
+      }
+    }
+  },
 })
