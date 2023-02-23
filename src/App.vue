@@ -1,7 +1,7 @@
 <template>
   <Scene />
   <div class="bg">
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -27,7 +27,7 @@ router.push("/");
   height: 100vh;
   width: 100vw;
   z-index: 2;
-  background: url("../public/assets/2d/img/遮挡@2x.png");
+  /* background: url("../public/assets/2d/img/遮挡@2x.png"); */
   background-size: 100% 100%;
 }
 </style>
