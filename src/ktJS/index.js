@@ -66,6 +66,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       '/model/xxfc.glb',
       '/model/xxdx.glb',
       '/model/xxfz.glb',
+      '/model/xxgd.glb',
       // '/model/cj-kj.glb',
       '/model/classroom/309.glb',
       '/model/classroom/310.glb',
@@ -145,7 +146,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-              
+
               STATE.sceneList.floor = child.clone()
               STATE.outClickObjects.push(STATE.sceneList.floor)
               child.visible = false
@@ -156,7 +157,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-              
+
               STATE.sceneList.peilou.add(child.clone())
               child.material.transparent = true
               child.visible = false
@@ -174,7 +175,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
           }
         })
 
-        
+
         // 主教学楼
       } else if (model.name === 'xxfc') {
         model.traverse(child => {
@@ -189,7 +190,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
                 child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
                 child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
                 child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-                
+
                 STATE.sceneList.mainBuilding.add(child.clone())
                 child.visible = false
                 break
@@ -208,13 +209,13 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         model.traverse(child => {
           if (child.isMesh) {
             if (child.name === 'lu') {
-              
+
               // 路
               const worldState = API.getWorldState(child)
               child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-              
+
               STATE.sceneList.road = child.clone()
               child.visible = false
 
@@ -228,13 +229,20 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-  
+
               STATE.sceneList.school.add(child.clone())
               child.visible = false
             }
           }
         })
         container.attach(STATE.sceneList.school)
+      } else if (model.name === 'xxgd') {
+        // 管道
+        model.traverse(child => {
+          if (child.isMesh) {
+            child.visible = false
+          }
+        })
       }
     },
 
@@ -251,10 +259,10 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       CACHE.container.clickObjects = STATE.outClickObjects
       CACHE.container.loadingBar.style.visibility = 'hidden'
 
-      
+
       // API.loadGUI()
       // API.initFloor()
-      
+
       API.shader.peilou.initShader()
       API.flyLines.initFlyLines()
 
@@ -266,7 +274,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
   const events = new Bol3D.Events(container)
   events.ondbclick = (e) => {
-    
+
     if (e.objects.length) {
       console.log('e: ', e.objects[0].point);
       const firstObject = e.objects[0].object

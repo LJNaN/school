@@ -245,7 +245,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 20,
+    repeat: 4,
     speed: 0.02
   }, {
     type: 'car',
@@ -258,7 +258,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 25,
+    repeat: 5,
     speed: 0.02
   }, {
     type: 'car',
@@ -272,7 +272,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 30,
+    repeat: 7,
     speed: 0.02
   }, {
     type: 'car',
@@ -283,7 +283,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 20,
+    repeat: 3,
     speed: 0.02
   }, {
     type: 'car',
@@ -294,7 +294,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 20,
+    repeat: 3,
     speed: 0.02
   }, {
     type: 'car',
@@ -305,9 +305,11 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 15,
+    repeat: 3,
     speed: 0.02
   }]
+
+const temp = null
 
 
 export const STATE = {
@@ -326,4 +328,5 @@ export const STATE = {
   classRoomPopup,  // 教室弹窗
   classRoomInfo,  // 教室的信息
   flyLineConfig, // 场景流线
+  temp
 }

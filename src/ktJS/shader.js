@@ -122,7 +122,7 @@ const Shader = {
           // 扩散
           shader.uniforms.uDiffusion = {
             value: new Bol3D.Vector3(
-              1, // 0 1开关
+              0, // 0 1开关
               1000, // 速度
               120 // 范围
             )
