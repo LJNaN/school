@@ -1,0 +1,205 @@
+<script setup>
+import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import Container from "./Container.vue";
+//实时监控数据
+const monitorData = [
+  { id: "01", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
+  { id: "02", name: "南门安保室", url: "./assets/2d/img/监控视频@2x.png" },
+  { id: "03", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
+  { id: "04", name: "图书馆2楼自习室", url: "./assets/2d/img/监控视频@2x.png" },
+];
+//监控报警数据
+const monitorAlertData = [
+  { name: "文科教学楼2202", event: "摄像头灭火报警" },
+  { name: "文科教学楼2201", event: "摄像头灭火报警" },
+  { name: "文科教学楼2302", event: "摄像头灭火报警" },
+  { name: "文科教学楼2401", event: "摄像头灭火报警" },
+  { name: "文科教学楼2101", event: "摄像头灭火报警" },
+];
+</script>
+<template>
+  <div class="right">
+    <Container title="教学楼使用情况">
+      <div class="buildUsage"></div>
+    </Container>
+    <Container title="实时监控">
+      <ul class="monitor">
+        <li v-for="(item, index) in monitorData" :key="index">
+          <div
+            class="monitorVideo"
+            :style="{
+              background: `url(${item.url})`,
+              backgroundSize: '100% 100%',
+            }"
+          ></div>
+          <div class="monitorName">
+            <span>{{ item.id }}</span>
+            <span>{{ item.name }}</span>
+          </div>
+        </li>
+      </ul>
+    </Container>
+    <Container title="监控警报">
+      <div class="monitorAlert">
+        <div class="title">
+          <img src="/assets/2d/img/组3@2x.png" />
+          <div class="eventTotal">
+            <p class="num">26</p>
+            <p>事件总数（件）</p>
+          </div>
+          <div class="deviceBtn">
+            <div class="Btn">消防</div>
+            <div class="Btn">门禁</div>
+            <div class="chooseBtn">摄像头</div>
+          </div>
+        </div>
+        <ul>
+          <li v-for="(item, index) in monitorAlertData" :key="index">
+            <div class="index">{{ index + 1 }}</div>
+            <span>{{ item.name }}</span>
+            <span class="event">{{ item.event }}</span>
+            <button class="Btn"><span>查看</span></button>
+          </li>
+        </ul>
+      </div>
+    </Container>
+  </div>
+</template>
+
+<style scoped lang ='scss'>
+.right {
+  width: vw(380);
+  height: vh(993);
+  position: absolute;
+  right: vw(10);
+  top: vh(56);
+  .buildUsage {
+    height: 100px;
+    margin: vh(25) 0 vh(51) 0;
+    border: 1px solid red;
+  }
+  .monitor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: vh(25) 0 vh(67) vw(5);
+    gap: vw(9);
+    li {
+      width: vw(170);
+      height: vh(118);
+      border: 1px solid #2190ca;
+      border-radius: 5px;
+      overflow: hidden;
+      .monitorVideo {
+        width: 100%;
+        height: vh(97);
+      }
+      .monitorName {
+        display: flex;
+        width: 100%;
+        height: vh(23);
+
+        justify-content: center;
+        align-items: center;
+        background: url("/assets/2d/img/监控底部@2x.png");
+        background-size: 100% 100%;
+        :first-child {
+          width: 10%;
+          margin-left: vw(5);
+          font-size: rem(12);
+          scale: 0.8;
+        }
+        :last-child {
+          width: 90%;
+          text-align: center;
+          font-size: rem(12);
+          scale: 0.8;
+        }
+      }
+    }
+  }
+  .monitorAlert {
+    padding-left: vw(14);
+    padding-right: vw(14);
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: vw(92);
+        height: vh(100);
+      }
+      .eventTotal {
+        flex: 1;
+        p {
+          font-size: rem(12);
+        }
+        .num {
+          font-size: rem(26);
+          font-family: YouSheBiaoTiHei;
+        }
+      }
+      .deviceBtn {
+        display: flex;
+        align-items: center;
+        flex: 2;
+        div {
+          flex: 1;
+          width: vw(49);
+          height: vh(19);
+          line-height: vh(19);
+          font-size: rem(12);
+          text-align: center;
+        }
+        .Btn {
+          background: url("/assets/2d/img/组6拷贝@2x.png");
+          background-size: 100% 100%;
+        }
+        .chooseBtn {
+          background: url("/assets/2d/img/组6@2x.png");
+
+          background-size: 100% 100%;
+        }
+      }
+    }
+    ul {
+      font-size: rem(12.78);
+      li {
+        width: vw(342);
+        height: vh(32.8);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: url("/assets/2d/img/矩形560拷贝6@2x.png");
+        .index {
+          width: vw(12);
+          height: vh(15);
+          line-height: vh(15);
+          background: gray;
+          border-radius: 2px;
+          text-align: center;
+        }
+        .event {
+          color: #ffe849;
+        }
+        .Btn {
+          width: 34px;
+          height: 19px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #ffffff;
+          background: rgba(135, 142, 147, 0.7);
+          border-radius: 5px;
+        }
+      }
+      :nth-child(3) {
+        .index {
+          color: #1fadff;
+        }
+      }
+    }
+  }
+}
+</style>
