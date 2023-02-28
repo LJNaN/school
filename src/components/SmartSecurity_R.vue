@@ -1,12 +1,14 @@
 <script setup>
 import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
+//实时监控数据
 const monitorData = [
   { id: "01", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
   { id: "02", name: "南门安保室", url: "./assets/2d/img/监控视频@2x.png" },
   { id: "03", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
   { id: "04", name: "图书馆2楼自习室", url: "./assets/2d/img/监控视频@2x.png" },
 ];
+//值班保卫信息数据
 const securityData = [
   { id: "01", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
   { id: "02", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
@@ -308,7 +310,6 @@ const parkData = {
       }
     }
   }
-
   .monitor {
     display: flex;
     flex-wrap: wrap;
