@@ -20,7 +20,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
     },
     renderer: {
       alpha: true, // 开启/关闭背景透明（默认为false）
-      logarithmicDepthBuffer: false, // 解决z精度造成的重叠闪面（默认true）
+      logarithmicDepthBuffer: true, // 解决z精度造成的重叠闪面（默认true）
       antialias: true, // 抗锯齿，默认开启
       precision: 'highp', // shader浮点精度，默认highp
     },
@@ -67,6 +67,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       '/model/xxdx.glb',
       '/model/xxfz.glb',
       '/model/xxgd.glb',
+      '/model/xxxt.glb',
       // '/model/cj-kj.glb',
       '/model/classroom/309.glb',
       '/model/classroom/310.glb',
@@ -80,7 +81,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
     bloomEnabled: true, // 需要开启，默认为false
     bloom: {
       bloomStrength: 1.5, // 强度
-      threshold: 0, // 阈值
+      threshold: 0.1, // 阈值
       bloomRadius: 0.1, // 半径
     },
     // hdrUrls: ['/hdr/HDR.hdr'],
@@ -122,8 +123,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         model.visible = false
       }
 
-      // 树
-      if (model.name === 'xxshu') {
+      if (model.name === 'xxshu') { // 树
         model.traverse(child => {
           if (child.isMesh) {
             const worldState = API.getWorldState(child)
@@ -137,7 +137,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         })
         container.attach(STATE.sceneList.tree)
 
-      } else if (model.name === 'xxdx') {
+      } else if (model.name === 'xxdx') { // 地面 配楼
         model.traverse(child => {
           if (child.isMesh) {
             if (child.name === 'Plane001') {
@@ -177,9 +177,12 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
 
         // 主教学楼
-      } else if (model.name === 'xxfc') {
+      } else if (model.name === 'xxfc') { // 交互主楼
         model.traverse(child => {
           if (child.isMesh) {
+            if(child.name.includes('boli')) {
+
+            }
             child.material.transparent = true
 
             for (let i = 0; i < STATE.floorList.length; i++) {
@@ -205,7 +208,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         })
         container.attach(STATE.sceneList.mainBuilding)
 
-      } else if (model.name === 'xxfz') {
+      } else if (model.name === 'xxfz') { // 路 多余的路 学校主体
         model.traverse(child => {
           if (child.isMesh) {
             if (child.name === 'lu') {
@@ -223,6 +226,11 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             } else if (child.name === 'dx10') {
               child.visible = false
 
+              // 主体橙色光带
+            } else if (child.name === 'dx02') {
+              STATE.bloomList.push(child)
+              console.log('child: ', child);
+
               // 学校主体
             } else {
               const worldState = API.getWorldState(child)
@@ -230,17 +238,32 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
 
-              STATE.sceneList.school.add(child.clone())
+              const childClone = child.clone()
+              childClone.material.transparent = false
+              STATE.outClickObjects.push(childClone)
+              STATE.sceneList.school.add(childClone)
               child.visible = false
             }
           }
         })
         container.attach(STATE.sceneList.school)
-      } else if (model.name === 'xxgd') {
-        // 管道
+      } else if (model.name === 'xxgd') { // 管道
         model.traverse(child => {
           if (child.isMesh) {
             child.visible = false
+          }
+        })
+      } else if (model.name === 'xxxt') { // 院墙
+        model.traverse(child => {
+          if (child.isMesh) {
+            const worldState = API.getWorldState(child)
+            child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+            child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+            child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+            child.scale.y = child.scale.y * 4
+            STATE.sceneList.school.add(child)
+            API.shader.school.initShader(child)
+
           }
         })
       }
@@ -266,6 +289,12 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       API.shader.peilou.initShader()
       API.flyLines.initFlyLines()
 
+
+      console.log('STATE.bloomList: ', STATE.sceneList);
+      STATE.bloomList.forEach(e => {
+        CACHE.container.addBloom(e)
+      })
+
       API.render()
       API.dbRightClick()
       callback && callback()
@@ -276,7 +305,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
   events.ondbclick = (e) => {
 
     if (e.objects.length) {
-      console.log('e: ', e.objects[0].point);
+      console.log('e.objects[0].object: ', e.objects[0].object);
       const firstObject = e.objects[0].object
 
       // 在外场景点到主楼
