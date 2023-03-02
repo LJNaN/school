@@ -56,19 +56,19 @@ onMounted(() => {
   <div class="home">
     <Head></Head>
     <Foot></Foot>
-    <!-- <SmartSchool_L></SmartSchool_L> -->
-    <!-- <SmartSchool_R></SmartSchool_R> -->
-    <!-- <SmartEducationInner_L></SmartEducationInner_L> -->
-    <!-- <SmartEducationInner_R></SmartEducationInner_R> -->
-    <!-- <SmartEducationOuter_L></SmartEducationOuter_L>
-    <SmartEducationOuter_R></SmartEducationOuter_R> -->
+    <SmartSchool_L></SmartSchool_L>
+    <SmartSchool_R></SmartSchool_R>
+    <!-- <SmartEducationInner_L></SmartEducationInner_L>
+    <SmartEducationInner_R></SmartEducationInner_R> -->
+    <!-- <SmartEducationOuter_L></SmartEducationOuter_L> -->
+    <!-- <SmartEducationOuter_R></SmartEducationOuter_R> -->
     <!-- <SmartSecurity_L></SmartSecurity_L> -->
     <!-- <SmartSecurity_R></SmartSecurity_R> -->
-    <SmartEnergy_L></SmartEnergy_L>
-    <SmartEnergy_R></SmartEnergy_R>
+    <!-- <SmartEnergy_L></SmartEnergy_L> -->
+    <!-- <SmartEnergy_R></SmartEnergy_R> -->
     <Icon_L></Icon_L>
     <!-- <Icon_R></Icon_R> -->
-    <Icon_R_Energy></Icon_R_Energy>
+    <!-- <Icon_R_Energy></Icon_R_Energy> -->
   </div>
 </template>
 

@@ -1,6 +1,14 @@
 <script setup>
-import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import {
+  reactive,
+  ref,
+  toRefs,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import Container from "./Container.vue";
+import * as echarts from "echarts";
 //教学情况查看数据
 const teachSituationData = [
   {
@@ -25,6 +33,126 @@ const teachSituationData = [
   },
 ];
 //停车场占用率数据
+const parkingUsageData = ref(null);
+let parkdata = ref([80, 60, 100, 85, 70, 90]);
+let parkingUsageEchart = null;
+const parkingUsageOption = reactive({
+  tooltip: {
+    trigger: "axis",
+    axisPointer: {
+      lineStyle: {
+        color: "rgb(126,199,255)",
+      },
+    },
+  },
+  legend: {
+    show: true,
+    top: 0,
+    height: 300,
+    itemWidth: 30, // 图例标记的图形宽度。
+    //   itemGap: 20, // 图例每项之间的间隔。
+    itemHeight: 10, //  图例标记的图形高度。
+    textStyle: {
+      color: "#fff",
+      fontSize: 14,
+      padding: [0, 8, 0, 8],
+    },
+  },
+  grid: {
+    top: "10%",
+    left: "10%",
+    right: "5%",
+    bottom: "10%",
+  },
+  xAxis: [
+    {
+      type: "category",
+      boundaryGap: false,
+      axisLine: {
+        //坐标轴轴线相关设置。数学上的x轴
+        show: true,
+        lineStyle: {
+          color: "rgb(41,188,245)",
+        },
+      },
+      axisLabel: {
+        //坐标轴刻度标签的相关设置
+        textStyle: {
+          color: "#FFFFFF",
+          fontSize: 12,
+        },
+      },
+      splitLine: {
+        show: false,
+        lineStyle: {
+          color: "#233653",
+        },
+      },
+      axisTick: {
+        show: false,
+      },
+      data: ["01-01", "01-02", "01-03", "01-04", "01-05", "01-06"],
+    },
+  ],
+  yAxis: [
+    {
+      name: "",
+      nameTextStyle: {
+        color: "#fff",
+        fontSize: 12,
+        padding: [0, 60, 0, 0],
+      },
+      // minInterval: 1,
+      type: "value",
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: "#1160a0",
+          type: "dashed",
+        },
+      },
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: "#008de7",
+        },
+      },
+      axisLabel: {
+        show: true,
+        textStyle: {
+          color: "#fff",
+          fontSize: 14,
+        },
+      },
+      axisTick: {
+        show: false,
+      },
+    },
+  ],
+  series: [
+    {
+      data: parkdata,
+      type: "line",
+      symbolSize: 0,
+      areaStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0.0, color: "rgba(54, 222, 221,1)" },
+            { offset: 0.5, color: "rgba(54, 222, 221,.5)" },
+            { offset: 1, color: "rgba(54, 222, 221,0.3)" },
+          ]),
+        },
+      },
+      itemStyle: {
+        normal: {
+          lineStyle: {
+            color: "rgba(54, 222, 221,1)",
+          },
+        },
+      },
+    },
+  ],
+});
 
 //会议室使用情况数据
 const roomUsageData = [];
@@ -34,6 +162,24 @@ for (let i = 0; i < 32; i++) {
     imgUrl: `/assets/2d/img/room${Math.ceil(Math.random() * 3)}.png`,
   });
 }
+
+let timer = setInterval(() => {
+  parkdata.value = parkdata.value.map(() => 40 + Math.ceil(Math.random() * 50));
+  if (parkingUsageEchart != null) {
+    parkingUsageEchart.setOption(parkingUsageOption);
+  }
+}, 2000);
+
+onMounted(() => {
+  parkingUsageEchart = echarts.init(parkingUsageData.value);
+  parkingUsageEchart.setOption(parkingUsageOption);
+  window.addEventListener("resize", () => {
+    parkingUsageEchart.resize();
+  });
+});
+onUnmounted(() => {
+  clearInterval(timer);
+});
 </script>
 <template>
   <div class="left">
@@ -51,7 +197,14 @@ for (let i = 0; i < 32; i++) {
       </div>
     </Container>
     <Container title="停车场占用率">
-      <div class="parkingUsage"></div>
+      <div class="parkingUsage">
+        <div class="title">
+          <div class="titleLeft"><span>开课教师数量</span></div>
+          <div class="titleCenter"><span>开课数量</span></div>
+          <div class="titleRight"><span>访问人数</span></div>
+        </div>
+        <div class="parkingUsageEchart" ref="parkingUsageData"></div>
+      </div>
     </Container>
     <Container title="会议室使用情况">
       <div class="roomUsage">
@@ -124,10 +277,35 @@ for (let i = 0; i < 32; i++) {
     }
   }
   .parkingUsage {
-    height: 200px;
-    margin: vh(33) 0 vh(80) 0;
-    border: 1px solid red;
+    .title {
+      display: flex;
+      justify-content: space-around;
+      margin-top: vh(33);
+      font-size: rem(12);
+      .titleLeft {
+        background: url("/assets/2d/img/btnleft@2x.png");
+        background-size: 100% 100%;
+      }
+      .titleCenter {
+        background: url("/assets/2d/img/btncenter@2x.png");
+        background-size: 100% 100%;
+      }
+      .titleRight {
+        background: url("/assets/2d/img/btnright@2x.png");
+        background-size: 100% 100%;
+      }
+      span {
+        display: block;
+        font-size: rem(12);
+        scale: 0.8;
+      }
+    }
+    .parkingUsageEchart {
+      height: 200px;
+      margin: 0 0 vh(60) 0;
+    }
   }
+
   .roomUsage {
     .title {
       display: flex;

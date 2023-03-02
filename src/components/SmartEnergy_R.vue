@@ -1,5 +1,12 @@
 <script setup>
-import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import {
+  reactive,
+  ref,
+  toRefs,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import Container from "./Container.vue";
 import * as echarts from "echarts";
 const warningMessageData = [];
@@ -11,9 +18,67 @@ for (let i = 0; i < 7; i++) {
     time: "2023/01/16",
   });
 }
+
+//能源消耗
+const energyConsumeData = ref(null);
+let energyStateEchart = null;
+let dataE = reactive([
+  { name: "配电室1", value: "30" },
+  { name: "配电室2", value: "70" },
+]);
+const energyConsumeOption = reactive({
+  color: ["#3baaff", "#ffdf00"],
+  tooltip: {},
+  legend: {
+    orient: "vertical",
+    right: 0,
+    itemWidth: 3,
+    itemHeight: 3,
+    icon: "circle",
+    itemGap: 10,
+    textStyle: {
+      color: "#ffffff",
+    },
+  },
+  series: [
+    // 外边设置
+    {
+      type: "pie",
+      center: ["50%", "50%"],
+      radius: ["50%", "60%"], // 数组的第一项是内半径、第二项是外半径
+      itemStyle: {
+        color: "rgba(206,213,225,0.01)",
+      },
+      label: {
+        show: false,
+      },
+      data: [],
+    },
+
+    // 展示层
+    {
+      type: "pie",
+      center: ["50%", "50%"],
+      radius: ["30%", "50%"],
+      itemStyle: {
+        borderWidth: 1, //描边线宽
+        borderColor: "#fff",
+      },
+      label: {
+        show: false,
+      },
+      data: dataE,
+    },
+  ],
+});
+
 //园区能耗态势
 const energyStateData = ref(null);
-const energyStateOption = {
+let energyConsumeEcharts = null;
+let dataD = ref([32, 36, 22, 33, 21, 43, 19, 34, 39, 35, 38, 42, 30, 3]);
+let dataS = ref([11, 33, 11, 22, 33, 22, 33, 21, 43, 19, 42, 30, 32, 23]);
+let dataQ = ref([25, 22, 26, 28, 27, 26, 23, 22, 33, 22, 33, 21, 43, 19]);
+const energyStateOption = reactive({
   tooltip: {
     trigger: "axis",
   },
@@ -86,7 +151,7 @@ const energyStateOption = {
       type: "line",
       min: 10,
       max: 40,
-      data: [32, 36, 22, 33, 21, 43, 19, 34, 39, 35, 38, 42, 30, 3],
+      data: dataD,
       showSymbol: false,
       lineStyle: {
         normal: {
@@ -120,7 +185,7 @@ const energyStateOption = {
       type: "line",
       min: 10,
       max: 40,
-      data: [25, 22, 26, 28, 27, 26, 23, 22, 33, 22, 33, 21, 43, 19],
+      data: dataQ,
       showSymbol: false,
       lineStyle: {
         normal: {
@@ -160,7 +225,7 @@ const energyStateOption = {
       type: "line",
       min: 10,
       max: 40,
-      data: [11, 33, 11, 22, 33, 22, 33, 21, 43, 19, 42, 30, 32, 23],
+      data: dataS,
       showSymbol: false,
       lineStyle: {
         normal: {
@@ -196,83 +261,37 @@ const energyStateOption = {
       smooth: true,
     },
   ],
-};
+});
 
-//能源消耗
-const energyConsumeData = ref(null);
-const energyConsumeOption = {
-  color: ["#3baaff", "#ffdf00"],
-  tooltip: {
-    trigger: "item",
-    formatter: "{b} <br/> {c}",
-    textStyle: {
-      color: "#fff",
-    },
-    padding: [10, 10],
-    axisPointer: {
-      type: "shadow",
-      shadowStyle: {
-        color: "#fff",
-      },
-    },
-  },
-  legend: {
-    orient: "vertical",
-    right: 0,
-    itemWidth: 3,
-    itemHeight: 3,
-    icon: "circle",
-    itemGap: 10,
-    textStyle: {
-      color: "#ffffff",
-    },
-  },
-  series: [
-    // 外边设置
-    {
-      type: "pie",
-      center: ["50%", "50%"],
-      radius: ["50%", "58%"], // 数组的第一项是内半径、第二项是外半径
-      itemStyle: {
-        color: "rgba(206,213,225,0.1)",
-      },
-      label: {
-        show: false,
-      },
-      data: [0],
-    },
+const timer = setInterval(() => {
+  dataE[0].value = Math.ceil(Math.random() * 100);
+  dataE[1].value = 100 - dataE[0].value;
 
-    // 展示层
-    {
-      type: "pie",
-      center: ["50%", "50%"],
-      radius: ["30%", "50%"],
-      itemStyle: {
-        borderWidth: 1, //描边线宽
-        borderColor: "#fff",
-      },
-      label: {
-        show: false,
-      },
-      data: [
-        { name: "配电室1", value: "30" },
-        { name: "配电室2", value: "70" },
-      ],
-    },
-  ],
-};
+  dataD.value = dataD.value.map(() => Math.ceil(Math.random() * 50));
+  dataS.value = dataS.value.map(() => Math.ceil(Math.random() * 50));
+  dataQ.value = dataQ.value.map(() => Math.ceil(Math.random() * 50));
+  if (energyConsumeEcharts != null) {
+    energyConsumeEcharts.setOption(energyConsumeOption);
+  }
+  if (energyStateEchart != null) {
+    energyStateEchart.setOption(energyStateOption);
+  }
+}, 2000);
 
 onMounted(() => {
-  const energyStateEchart = echarts.init(energyStateData.value);
+  energyStateEchart = echarts.init(energyStateData.value);
   energyStateEchart.setOption(energyStateOption);
 
-  const energyConsumeEcharts = echarts.init(energyConsumeData.value);
+  energyConsumeEcharts = echarts.init(energyConsumeData.value);
   energyConsumeEcharts.setOption(energyConsumeOption);
-  console.log(energyConsumeEcharts);
   window.addEventListener("resize", () => {
     energyStateEchart.resize();
     energyConsumeEcharts.resize();
   });
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
 });
 </script>
 <template>
@@ -331,6 +350,7 @@ onMounted(() => {
   top: vh(56);
   right: vw(10);
   .energyConsume {
+    margin: vh(20) 0 vh(58) 0;
     .energybody {
       display: flex;
       justify-content: space-around;

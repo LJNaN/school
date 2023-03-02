@@ -1,7 +1,7 @@
 <template>
   <Scene />
   <div class="bg">
-    <!-- <router-view></router-view> -->
+    <router-view></router-view>
   </div>
 </template>
 

@@ -3,22 +3,24 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 </script>
 <template>
   <div class="foot">
-    <div>
+    <router-link to="/SmartSchool">
       <div class="school"></div>
-      <span>智慧校园</span>
-    </div>
-    <div>
+      <span>智慧校园</span></router-link
+    >
+
+    <router-link to="SmartEducationOuter">
       <div class="education"></div>
       <span>智慧教学</span>
-    </div>
-    <div>
+    </router-link>
+
+    <router-link to="SmartSecurity">
       <div class="security"></div>
       <span>智慧安防</span>
-    </div>
-    <div>
+    </router-link>
+    <router-link to="SmartEnergy">
       <div class="energy"></div>
       <span>智慧能源</span>
-    </div>
+    </router-link>
   </div>
 </template>
 

@@ -20,7 +20,14 @@ const monitorAlertData = [
 <template>
   <div class="right">
     <Container title="教学楼使用情况">
-      <div class="buildUsage"></div>
+      <div class="buildUsage">
+        <img src="/assets/2d/img/金字塔@2x.png" />
+        <div class="leftText">
+          <p><span>宿舍使用</span><span>195个（64.1%）</span></p>
+          <p><span>教师使用</span><span>105个（35.9%）</span></p>
+          <p><span>总数</span><span>105个（100%）</span></p>
+        </div>
+      </div>
     </Container>
     <Container title="实时监控">
       <ul class="monitor">
@@ -74,9 +81,34 @@ const monitorAlertData = [
   right: vw(10);
   top: vh(56);
   .buildUsage {
-    height: 100px;
     margin: vh(25) 0 vh(51) 0;
-    border: 1px solid red;
+    display: flex;
+    justify-content: space-around;
+
+    img {
+      width: vw(159);
+      height: vh(159);
+    }
+    .leftText {
+      width: vw(242);
+      height: vh(159);
+      font-size: rem(13);
+      display: flex;
+      flex-wrap: wrap;
+      gap: vh(10);
+      padding: vh(25) vw(11) 0 0;
+      p {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        :first-child {
+          text-align: end;
+        }
+        span {
+          width: 46%;
+        }
+      }
+    }
   }
   .monitor {
     display: flex;

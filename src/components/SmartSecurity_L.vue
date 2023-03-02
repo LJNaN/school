@@ -1,11 +1,20 @@
 <script setup>
-import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import {
+  reactive,
+  ref,
+  toRefs,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import Container from "./Container.vue";
 import * as echarts from "echarts";
 
 //学校访客echarts
 const visitorData = ref(null);
-const visitorOption = {
+let visitorEchart = null;
+let vdata = ref([30, 35, 101, 40, 32, 48, 19]);
+const visitorOption = reactive({
   tooltip: {
     trigger: "axis",
     backgroundColor: "rgba(17,95,182,0.5)",
@@ -26,10 +35,9 @@ const visitorOption = {
     },
   },
   grid: {
-    left: "10%",
-    right: "10%",
-    bottom: "20%",
-    top: "28%",
+    left: "5%",
+    bottom: 0,
+    top: "5%",
     containLabel: true,
   },
   xAxis: {
@@ -154,14 +162,16 @@ const visitorOption = {
           shadowBlur: 6,
         },
       },
-      data: [30, 35, 101, 40, 32, 48, 19],
+      data: vdata,
     },
   ],
-};
+});
 
 //消防检测echarts
 const fireDetectionData = ref(null);
-const fireDetectionOption = {
+let fireDetectionEchart = null;
+let firedata = ref([290, 460, 505, 750]);
+const fireDetectionOption = reactive({
   // backgroundColor: "#051C43",
   tooltip: {
     trigger: "axis",
@@ -240,7 +250,7 @@ const fireDetectionOption = {
       name: "",
       type: "bar",
       barWidth: 9,
-      data: [290, 460, 505, 750],
+      data: firedata,
       // barCategoryGap:"20%",
       itemStyle: {
         normal: {
@@ -259,11 +269,13 @@ const fireDetectionOption = {
       },
     },
   ],
-};
-
+});
 //预警分析echarts
 const warningAnalysisData = ref(null);
-const warningAnalysisOption = {
+let warningAnalysisEcharts = null;
+let datanan = ref([80, 80, 80, 70, 60, 50]);
+let datanv = ref([40, 70, 50, 60, 30, 80]);
+const warningAnalysisOption = reactive({
   // backgroundColor: "#111b29",
   color: ["#3D91F7", "#61BE67"],
   tooltip: {
@@ -332,7 +344,7 @@ const warningAnalysisOption = {
   series: [
     {
       type: "radar",
-      symbolSize: 10,
+      symbolSize: 5,
       itemStyle: {
         borderColor: "rgba(66, 242, 185, 1)",
         color: "#fff",
@@ -347,7 +359,7 @@ const warningAnalysisOption = {
       data: [
         {
           // TODO:
-          value: [80, 80, 80, 70, 60, 50],
+          value: datanan,
           name: "男",
           areaStyle: {
             normal: {
@@ -381,7 +393,7 @@ const warningAnalysisOption = {
         },
         {
           // TODO:
-          value: [40, 70, 50, 60, 30, 80],
+          value: datanv,
           name: "女",
           itemStyle: {
             borderColor: "rgba(245, 196, 85, 1)",
@@ -427,16 +439,34 @@ const warningAnalysisOption = {
       ],
     },
   ],
-};
+});
+
+const timer = setInterval(() => {
+  vdata.value = vdata.value.map(() => 60 + Math.ceil(Math.random() * 50));
+  firedata.value = firedata.value.map(
+    () => 400 + Math.ceil(Math.random() * 600)
+  );
+  datanan.value = datanan.value.map(() => 50 + Math.ceil(Math.random() * 50));
+  datanv.value = datanv.value.map(() => 50 + Math.ceil(Math.random() * 50));
+  if (visitorEchart != null) {
+    visitorEchart.setOption(visitorOption);
+  }
+  if (fireDetectionEchart != null) {
+    fireDetectionEchart.setOption(fireDetectionOption);
+  }
+  if (warningAnalysisEcharts != null) {
+    warningAnalysisEcharts.setOption(warningAnalysisOption);
+  }
+}, 2000);
 
 onMounted(() => {
-  const visitorEchart = echarts.init(visitorData.value);
+  visitorEchart = echarts.init(visitorData.value);
   visitorEchart.setOption(visitorOption);
 
-  const fireDetectionEchart = echarts.init(fireDetectionData.value);
+  fireDetectionEchart = echarts.init(fireDetectionData.value);
   fireDetectionEchart.setOption(fireDetectionOption);
 
-  const warningAnalysisEcharts = echarts.init(warningAnalysisData.value);
+  warningAnalysisEcharts = echarts.init(warningAnalysisData.value);
   warningAnalysisEcharts.setOption(warningAnalysisOption);
   //echart自适应
   window.addEventListener("resize", () => {
@@ -444,6 +474,10 @@ onMounted(() => {
     fireDetectionEchart.resize();
     warningAnalysisEcharts.resize();
   });
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
 });
 </script>
 <template>
@@ -479,6 +513,7 @@ onMounted(() => {
   top: vh(56);
   .visitorTitle {
     display: flex;
+    margin-top: vh(20);
     .dayVisitor {
       width: vw(154);
       height: vh(38);
@@ -509,17 +544,19 @@ onMounted(() => {
     }
   }
   .visitorEcharts {
-    width: vw(330);
-    height: vh(330);
+    width: vw(380);
+    height: vh(174);
+    margin-bottom: vh(41);
   }
 
   .fireDetectionEcharts {
-    width: vw(230);
+    width: vw(380);
     height: vh(230);
+    margin-top: vh(30);
   }
 
   .warningAnalysisEcharts {
-    width: vw(330);
+    width: vw(380);
     height: vh(330);
   }
 }
