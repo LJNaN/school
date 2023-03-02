@@ -441,6 +441,7 @@ const warningAnalysisOption = reactive({
   ],
 });
 
+//echarts动态和自适应
 const timer = setInterval(() => {
   vdata.value = vdata.value.map(() => 60 + Math.ceil(Math.random() * 50));
   firedata.value = firedata.value.map(
@@ -459,6 +460,11 @@ const timer = setInterval(() => {
   }
 }, 2000);
 
+function echartsResize() {
+  visitorEchart.resize();
+  fireDetectionEchart.resize();
+  warningAnalysisEcharts.resize();
+}
 onMounted(() => {
   visitorEchart = echarts.init(visitorData.value);
   visitorEchart.setOption(visitorOption);
@@ -468,16 +474,12 @@ onMounted(() => {
 
   warningAnalysisEcharts = echarts.init(warningAnalysisData.value);
   warningAnalysisEcharts.setOption(warningAnalysisOption);
-  //echart自适应
-  window.addEventListener("resize", () => {
-    visitorEchart.resize();
-    fireDetectionEchart.resize();
-    warningAnalysisEcharts.resize();
-  });
+  window.addEventListener("resize", echartsResize);
 });
 
 onUnmounted(() => {
   clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>
@@ -517,7 +519,7 @@ onUnmounted(() => {
     .dayVisitor {
       width: vw(154);
       height: vh(38);
-      background: url("/assets/2d/img/底@2x.png");
+      background: url("/assets/2d/img/smartSecurity/底@2x.png");
       background-size: 100% 100%;
       flex: 1;
       display: flex;
@@ -531,7 +533,7 @@ onUnmounted(() => {
     .weekVisitor {
       width: vw(154);
       height: vh(38);
-      background: url("/assets/2d/img/底@2x.png");
+      background: url("/assets/2d/img/smartSecurity/底@2x.png");
       background-size: 100% 100%;
       flex: 1;
       display: flex;

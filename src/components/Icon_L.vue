@@ -6,28 +6,28 @@ const iconTitle = [
     value: "8.3",
     unit: "℃",
     color: "#fb8229",
-    url: "./assets/2d/img/icon_L温度.png",
+    url: "./assets/2d/img/icon/icon_L温度.png",
   },
   {
     name: "湿度",
     value: "72%",
     unit: "%RH",
     color: "#2a94ff",
-    url: "./assets/2d/img/icon_L湿度.png",
+    url: "./assets/2d/img/icon/icon_L湿度.png",
   },
   {
     name: "空气质量",
     value: "790",
     unit: "m",
     color: "#52c673",
-    url: "./assets/2d/img/icon_L空气质量.png",
+    url: "./assets/2d/img/icon/icon_L空气质量.png",
   },
   {
     name: "PM2.5",
     value: "56",
     unit: "g/m³",
     color: "#41f9f2",
-    url: "./assets/2d/img/icon_LPM2.5.png",
+    url: "./assets/2d/img/icon/icon_LPM2.5.png",
   },
 ];
 </script>

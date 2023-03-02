@@ -14,25 +14,25 @@ const todayPowerData = [
   {
     name: "照明设备",
     value: "426",
-    imgUrl: "/assets/2d/img/照明设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/照明设备@2x.png",
     Echarts: "",
   },
   {
     name: "空调设备",
     value: "426",
-    imgUrl: "/assets/2d/img/空调设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/空调设备@2x.png",
     Echarts: "",
   },
   {
     name: "显示设备",
     value: "426",
-    imgUrl: "/assets/2d/img/显示设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/显示设备@2x.png",
     Echarts: "",
   },
   {
     name: "插座",
     value: "426",
-    imgUrl: "/assets/2d/img/插座设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/插座设备@2x.png",
     Echarts: "",
   },
 ];
@@ -194,6 +194,7 @@ const energyConsumeOption = reactive({
   ],
 });
 
+//echarts动态和自适应
 const timer = setInterval(() => {
   dataY.value = dataY.value.map(() => Math.ceil(Math.random() * 20));
   dataB.value = dataB.value.map(() => 1000 + Math.ceil(Math.random() * 3000));
@@ -216,6 +217,15 @@ const timer = setInterval(() => {
   }
 }, 2000);
 
+function echartsResize() {
+  todayPowerEcharts1.resize();
+  todayPowerEcharts2.resize();
+  todayPowerEcharts3.resize();
+  todayPowerEcharts4.resize();
+
+  energyConsumeEcharts.resize();
+}
+
 onMounted(() => {
   todayPowerEcharts1 = echarts.init(todayPowerEchartsData.value[0]);
   todayPowerEcharts1.setOption(option);
@@ -229,18 +239,11 @@ onMounted(() => {
   energyConsumeEcharts = echarts.init(energyConsumeData.value);
   energyConsumeEcharts.setOption(energyConsumeOption);
 
-  window.addEventListener("resize", () => {
-    todayPowerEcharts1.resize();
-    todayPowerEcharts2.resize();
-    todayPowerEcharts3.resize();
-    todayPowerEcharts4.resize();
-
-    energyConsumeEcharts.resize();
-  });
+  window.addEventListener("resize", echartsResize);
 });
-
 onUnmounted(() => {
   clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>

@@ -205,6 +205,7 @@ let warningAnalysisOption = reactive({
   ],
 });
 let warningAnalysisEcharts = null;
+//echarts动态和自适应
 let timer = setInterval(() => {
   datanv.value = datanv.value.map(() => 40 + Math.ceil(Math.random() * 50));
   datanan.value = datanv.value.map(() => 40 + Math.ceil(Math.random() * 50));
@@ -212,25 +213,27 @@ let timer = setInterval(() => {
     warningAnalysisEcharts.setOption(warningAnalysisOption);
   }
 }, 2000);
+function echartsResize() {
+  warningAnalysisEcharts.resize();
+}
 
 onMounted(() => {
   warningAnalysisEcharts = echarts.init(warningAnalysisData.value);
   warningAnalysisEcharts.setOption(warningAnalysisOption);
   //echart自适应
-  window.addEventListener("resize", () => {
-    warningAnalysisEcharts.resize();
-  });
+  window.addEventListener("resize", echartsResize);
 });
 
 onUnmounted(() => {
   clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>
   <div class="left">
     <Container title="园区概况">
       <div class="parkProfile">
-        <img src="/assets/2d/img/园区图片.png" />
+        <img src="/assets/2d/img/smartSchool/园区图片.png" />
         <P
           >学校历来重视党的建设和思想政治工作，坚持以习近平新时代中国特色社会主义思想为指导，全面贯彻落实党的十九大和十九届历次全会精神，切实加强党对高校的全面领导，坚定不移落实全面从严治党主体责任，全面贯彻执行党的教育方针，落实立德树人根本任务，确保党的意志主张在高校落地生根，确保学校始终成为培养社会主义建设者和接班人的坚强阵地。</P
         >
@@ -252,7 +255,7 @@ onUnmounted(() => {
           v-for="(item, index) in securityData"
           :key="index"
           :style="{
-            background: 'url(/assets/2d/img/圆角矩形@2x.png)',
+            background: 'url(/assets/2d/img/smartSchool/圆角矩形@2x.png)',
             backgroundSize: '100% 100%',
           }"
         >

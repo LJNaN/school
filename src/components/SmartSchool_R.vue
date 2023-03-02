@@ -3,10 +3,26 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
 //实时监控数据
 const monitorData = [
-  { id: "01", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "02", name: "南门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "03", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "04", name: "图书馆2楼自习室", url: "./assets/2d/img/监控视频@2x.png" },
+  {
+    id: "01",
+    name: "北门安保室",
+    url: "./assets/2d/img/smartSchool/监控视频@2x.png",
+  },
+  {
+    id: "02",
+    name: "南门安保室",
+    url: "./assets/2d/img/smartSchool/监控视频@2x.png",
+  },
+  {
+    id: "03",
+    name: "北门安保室",
+    url: "./assets/2d/img/smartSchool/监控视频@2x.png",
+  },
+  {
+    id: "04",
+    name: "图书馆2楼自习室",
+    url: "./assets/2d/img/smartSchool/监控视频@2x.png",
+  },
 ];
 //监控报警数据
 const monitorAlertData = [
@@ -21,7 +37,7 @@ const monitorAlertData = [
   <div class="right">
     <Container title="教学楼使用情况">
       <div class="buildUsage">
-        <img src="/assets/2d/img/金字塔@2x.png" />
+        <img src="/assets/2d/img/smartSchool/金字塔@2x.png" />
         <div class="leftText">
           <p><span>宿舍使用</span><span>195个（64.1%）</span></p>
           <p><span>教师使用</span><span>105个（35.9%）</span></p>
@@ -49,7 +65,7 @@ const monitorAlertData = [
     <Container title="监控警报">
       <div class="monitorAlert">
         <div class="title">
-          <img src="/assets/2d/img/组3@2x.png" />
+          <img src="/assets/2d/img/smartSchool/组3@2x.png" />
           <div class="eventTotal">
             <p class="num">26</p>
             <p>事件总数（件）</p>
@@ -134,7 +150,7 @@ const monitorAlertData = [
 
         justify-content: center;
         align-items: center;
-        background: url("/assets/2d/img/监控底部@2x.png");
+        background: url("/assets/2d/img/smartSchool/监控底部@2x.png");
         background-size: 100% 100%;
         :first-child {
           width: 10%;
@@ -185,11 +201,11 @@ const monitorAlertData = [
           text-align: center;
         }
         .Btn {
-          background: url("/assets/2d/img/组6拷贝@2x.png");
+          background: url("/assets/2d/img/smartSchool/组6拷贝@2x.png");
           background-size: 100% 100%;
         }
         .chooseBtn {
-          background: url("/assets/2d/img/组6@2x.png");
+          background: url("/assets/2d/img/smartSchool/组6@2x.png");
 
           background-size: 100% 100%;
         }
@@ -203,7 +219,7 @@ const monitorAlertData = [
         display: flex;
         justify-content: space-around;
         align-items: center;
-        background: url("/assets/2d/img/矩形560拷贝6@2x.png");
+        background: url("/assets/2d/img/smartSchool/矩形560拷贝6@2x.png");
         .index {
           width: vw(12);
           height: vh(15);

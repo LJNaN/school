@@ -14,22 +14,22 @@ const teachSituationData = [
   {
     name: "上课教师人数",
     value: "282",
-    imgUrl: "/assets/2d/img/教学情况查看1.png",
+    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看1.png",
   },
   {
     name: "上课学生人数",
     value: "290",
-    imgUrl: "/assets/2d/img/教学情况查看1.png",
+    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看1.png",
   },
   {
     name: "涉及课程门类",
     value: "302",
-    imgUrl: "/assets/2d/img/教学情况查看2.png",
+    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看2.png",
   },
   {
     name: "授课学院数量",
     value: "322",
-    imgUrl: "/assets/2d/img/教学情况查看3.png",
+    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看3.png",
   },
 ];
 //停车场占用率数据
@@ -159,26 +159,30 @@ const roomUsageData = [];
 for (let i = 0; i < 32; i++) {
   roomUsageData.push({
     name: "1F",
-    imgUrl: `/assets/2d/img/room${Math.ceil(Math.random() * 3)}.png`,
+    imgUrl: `/assets/2d/img/smartEducationOuter/room${Math.ceil(
+      Math.random() * 3
+    )}.png`,
   });
 }
 
+//echats动态和自适应
 let timer = setInterval(() => {
   parkdata.value = parkdata.value.map(() => 40 + Math.ceil(Math.random() * 50));
   if (parkingUsageEchart != null) {
     parkingUsageEchart.setOption(parkingUsageOption);
   }
 }, 2000);
-
+function echartsResize() {
+  parkingUsageEchart.resize();
+}
 onMounted(() => {
   parkingUsageEchart = echarts.init(parkingUsageData.value);
   parkingUsageEchart.setOption(parkingUsageOption);
-  window.addEventListener("resize", () => {
-    parkingUsageEchart.resize();
-  });
+  window.addEventListener("resize", echartsResize);
 });
 onUnmounted(() => {
   clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>
@@ -283,15 +287,15 @@ onUnmounted(() => {
       margin-top: vh(33);
       font-size: rem(12);
       .titleLeft {
-        background: url("/assets/2d/img/btnleft@2x.png");
+        background: url("/assets/2d/img/smartEducationOuter/btnleft@2x.png");
         background-size: 100% 100%;
       }
       .titleCenter {
-        background: url("/assets/2d/img/btncenter@2x.png");
+        background: url("/assets/2d/img/smartEducationOuter/btncenter@2x.png");
         background-size: 100% 100%;
       }
       .titleRight {
-        background: url("/assets/2d/img/btnright@2x.png");
+        background: url("/assets/2d/img/smartEducationOuter/btnright@2x.png");
         background-size: 100% 100%;
       }
       span {

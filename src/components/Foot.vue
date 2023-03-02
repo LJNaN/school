@@ -42,25 +42,25 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
   .school {
     width: vw(70);
     height: vh(70);
-    background: url("/assets/2d/img/校园@2x.png");
+    background: url("/assets/2d/img/foot/校园@2x.png");
     background-size: 100% 100%;
   }
   .education {
     width: vw(70);
     height: vh(70);
-    background: url("/assets/2d/img/教学@2x.png");
+    background: url("/assets/2d/img/foot/教学@2x.png");
     background-size: 100% 100%;
   }
   .security {
     width: vw(70);
     height: vh(70);
-    background: url("/assets/2d/img/安防@2x.png");
+    background: url("/assets/2d/img/foot/安防@2x.png");
     background-size: 100% 100%;
   }
   .energy {
     width: vw(70);
     height: vh(70);
-    background: url("/assets/2d/img/能源@2x.png");
+    background: url("/assets/2d/img/foot/能源@2x.png");
     background-size: 100% 100%;
   }
   span {

@@ -18,6 +18,7 @@ import SmartEducationInner_R from "@/components/SmartEducationInner_R.vue";
 import SmartEducationOuter_L from "@/components/SmartEducationOuter_L.vue";
 import SmartEducationOuter_R from "@/components/SmartEducationOuter_R.vue";
 
+import Echarts from "@/components/Echarts.vue";
 const leftRef = ref(null);
 
 onMounted(() => {
@@ -67,8 +68,9 @@ onMounted(() => {
     <!-- <SmartEnergy_L></SmartEnergy_L> -->
     <!-- <SmartEnergy_R></SmartEnergy_R> -->
     <Icon_L></Icon_L>
-    <!-- <Icon_R></Icon_R> -->
+    <Icon_R></Icon_R>
     <!-- <Icon_R_Energy></Icon_R_Energy> -->
+    <!-- <Echarts></Echarts> -->
   </div>
 </template>
 

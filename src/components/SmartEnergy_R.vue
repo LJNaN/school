@@ -263,6 +263,7 @@ const energyStateOption = reactive({
   ],
 });
 
+//echarts动态和自适应
 const timer = setInterval(() => {
   dataE[0].value = Math.ceil(Math.random() * 100);
   dataE[1].value = 100 - dataE[0].value;
@@ -277,6 +278,10 @@ const timer = setInterval(() => {
     energyStateEchart.setOption(energyStateOption);
   }
 }, 2000);
+function echartsResize() {
+  energyStateEchart.resize();
+  energyConsumeEcharts.resize();
+}
 
 onMounted(() => {
   energyStateEchart = echarts.init(energyStateData.value);
@@ -284,14 +289,12 @@ onMounted(() => {
 
   energyConsumeEcharts = echarts.init(energyConsumeData.value);
   energyConsumeEcharts.setOption(energyConsumeOption);
-  window.addEventListener("resize", () => {
-    energyStateEchart.resize();
-    energyConsumeEcharts.resize();
-  });
+  window.addEventListener("resize", echartsResize);
 });
 
 onUnmounted(() => {
   clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>
@@ -363,7 +366,7 @@ onUnmounted(() => {
         .yellow {
           width: vw(163);
           height: vh(54);
-          background: url("/assets/2d/img/能源分类消耗Y@2x.png");
+          background: url("/assets/2d/img/smartEnergy/能源分类消耗Y@2x.png");
           background-size: 100% 100%;
           font-size: rem(27);
           line-height: 54px;
@@ -378,7 +381,7 @@ onUnmounted(() => {
           font-size: rem(27);
           line-height: 54px;
           color: #3baaffff;
-          background: url("/assets/2d/img/能源分类消耗B@2x.png");
+          background: url("/assets/2d/img/smartEnergy/能源分类消耗B@2x.png");
           background-size: 100% 100%;
           span {
             font-size: rem(14);
@@ -397,7 +400,7 @@ onUnmounted(() => {
       .btnleft {
         width: vw(74);
         height: vh(17);
-        background: url("/assets/2d/img/btnleft@2x.png");
+        background: url("/assets/2d/img/smartEnergy/btnleft@2x.png");
         background-size: 100% 100%;
         span {
           display: block;
@@ -408,7 +411,7 @@ onUnmounted(() => {
       .btncenter {
         width: vw(70);
         height: vw(17);
-        background: url("/assets/2d/img/btncenter@2x.png");
+        background: url("/assets/2d/img/smartEnergy/btncenter@2x.png");
         background-size: 100% 100%;
         span {
           display: block;
@@ -419,7 +422,7 @@ onUnmounted(() => {
       .btnright {
         width: vw(74);
         height: vh(17);
-        background: url("/assets/2d/img/btnright@2x.png");
+        background: url("/assets/2d/img/smartEnergy/btnright@2x.png");
         background-size: 100% 100%;
         span {
           display: block;
@@ -444,7 +447,7 @@ onUnmounted(() => {
       li {
         width: 100%;
         height: vh(34);
-        background: url("/assets/2d/img/矩形560拷贝6@2x.png");
+        background: url("/assets/2d/img/smartEnergy/矩形560拷贝6@2x.png");
         background-size: 100% 100%;
         display: flex;
         justify-content: space-around;
