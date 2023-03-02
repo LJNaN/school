@@ -476,7 +476,7 @@ const flyLines = {
       } else if (STATE.flyLineConfig[i].type === 'car') {
         carLineGroup.add(flyLine)
       }
-      CACHE.container.addBloom(flyLine)
+      STATE.bloomList.push(flyLine)
     }
 
     STATE.sceneList.flyLine = flyLineGroup
@@ -499,10 +499,12 @@ const flyLines = {
 
 
 const render = () => {
-  // const elapsedTime = STATE.clock.getElapsedTime()
   const singleFrameTime = STATE.clock.getDelta()
+  const elapsedTime = STATE.clock.getElapsedTime()
 
+  
   shader.peilou.shaderAnimate(singleFrameTime)
+  shader.school.shaderAnimate(elapsedTime)
   flyLines.animation()
 
   requestAnimationFrame(render);

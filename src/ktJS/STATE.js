@@ -309,6 +309,9 @@ const flyLineConfig = [
     speed: 0.02
   }]
 
+// 辉光数组
+const bloomList = []
+
 const temp = null
 
 
@@ -328,5 +331,6 @@ export const STATE = {
   classRoomPopup,  // 教室弹窗
   classRoomInfo,  // 教室的信息
   flyLineConfig, // 场景流线
+  bloomList, // 辉光数组
   temp
 }
