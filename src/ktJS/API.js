@@ -302,6 +302,8 @@ function initInnerFloor(floor, duration = 800) {
   STATE.sceneList.school.visible = true
   STATE.sceneList.road.visible = true
   STATE.sceneList.tree.visible = true
+  STATE.sceneList.flyLine.visible = true
+  STATE.sceneList.carLine.visible = true
 
   const classRoomList = ['309', '310', '311', '312', '316', '317', '318', '319']
   classRoomList.forEach(e => {
@@ -373,6 +375,8 @@ function enterClassRoom(classRoomName) {
   STATE.sceneList.school.visible = false
   STATE.sceneList.road.visible = false
   STATE.sceneList.tree.visible = false
+  STATE.sceneList.flyLine.visible = false
+  STATE.sceneList.carLine.visible = false
 
   router.push("/classroom?id=" + classRoomName)
 }
@@ -483,6 +487,8 @@ const flyLines = {
     STATE.sceneList.carLine = carLineGroup
     CACHE.container.attach(STATE.sceneList.flyLine)
     CACHE.container.attach(STATE.sceneList.carLine)
+
+    STATE.sceneList.carLine.position.y += 10
 
 
   },

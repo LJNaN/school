@@ -233,7 +233,7 @@ const flyLineConfig = [
     radius: 1,
     imgUrl: '/assets/3d/img/flyline1.png',
     flowDirection: 'x',
-    repeat: 4,
+    repeat: 1.2,
     speed: 0.005
   }, {
     type: 'car',
@@ -245,26 +245,26 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 4,
+    repeat: 1.2,
     speed: 0.02
   }, {
     type: 'car',
     path: [
       993, 0, -242,
       287, 0, -239,
-      287, 0, -8,
+      285, 0, -12,
       132, 0, -12
     ],
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 5,
+    repeat: 1.2,
     speed: 0.02
   }, {
     type: 'car',
     path: [
       955, 0, -12,
-      287, 0, -8,
+      285, 0, -12,
       286, 0, 227,
       -275, 0, 234,
       -280, 0, 30
@@ -272,7 +272,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 7,
+    repeat: 1.2,
     speed: 0.02
   }, {
     type: 'car',
@@ -283,7 +283,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 3,
+    repeat: 1.2,
     speed: 0.02
   }, {
     type: 'car',
@@ -294,7 +294,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 3,
+    repeat: 1.2,
     speed: 0.02
   }, {
     type: 'car',
@@ -305,7 +305,7 @@ const flyLineConfig = [
     radius: 0.9,
     imgUrl: '/assets/3d/img/flyline2.png',
     flowDirection: 'x',
-    repeat: 3,
+    repeat: 1.2,
     speed: 0.02
   }]
 

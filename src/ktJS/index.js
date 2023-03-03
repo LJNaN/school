@@ -131,7 +131,19 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
             child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
 
-            STATE.sceneList.tree.add(child.clone())
+            // STATE.sceneList.tree.add(child.clone())
+            
+            // 线框
+            const edges = new Bol3D.EdgesGeometry( child.geometry.clone() );
+            const line = new Bol3D.LineSegments( edges, new Bol3D.LineBasicMaterial( { color: 0xff8502 } ) );
+            line.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
+            line.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
+            line.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+            line.material.transparent = true
+            line.material.opacity = 0.05
+            STATE.sceneList.tree.add(line)
+            STATE.bloomList.push(line)
+
             child.visible = false
           }
         })
@@ -148,7 +160,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
 
               STATE.sceneList.floor = child.clone()
-              STATE.outClickObjects.push(STATE.sceneList.floor)
+
               child.visible = false
 
             } else {
@@ -162,15 +174,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.material.transparent = true
               child.visible = false
 
-              // 线框
-              // const edges = new Bol3D.EdgesGeometry( child.geometry.clone() );
-              // const line = new Bol3D.LineSegments( edges, new Bol3D.LineBasicMaterial( { color: 0x65cae2 } ) );
-              // line.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
-              // line.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
-              // line.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-              // line.material.transparent = true
-              // line.material.opacity = 0.1
-              // STATE.sceneList.peilouLine.add(line)
+              
             }
           }
         })
@@ -180,11 +184,6 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       } else if (model.name === 'xxfc') { // 交互主楼
         model.traverse(child => {
           if (child.isMesh) {
-            if(child.name.includes('boli')) {
-
-            }
-            child.material.transparent = true
-
             for (let i = 0; i < STATE.floorList.length; i++) {
               if (STATE.floorList[i].model.includes(child.name)) {
                 child.userData.floor = STATE.floorList[i].floor
@@ -193,8 +192,15 @@ export const sceneOnLoad = ({ domElement, callback }) => {
                 child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
                 child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
                 child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
+                
+                const meshClone = child.clone()
+                if(meshClone.name.includes('boli')) {
+                  meshClone.material.color = new Bol3D.Color(0.2, 0.2, 0.2)
+                  STATE.bloomList.push(meshClone)
+                  
+                }
 
-                STATE.sceneList.mainBuilding.add(child.clone())
+                STATE.sceneList.mainBuilding.add(meshClone)
                 child.visible = false
                 break
               }
@@ -228,8 +234,11 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
               // 主体橙色光带
             } else if (child.name === 'dx02') {
-              STATE.bloomList.push(child)
-              console.log('child: ', child);
+              const meshClone = child.clone()
+              STATE.bloomList.push(meshClone)
+              STATE.sceneList.school.add(meshClone)
+              child.visible = false
+              
 
               // 学校主体
             } else {
@@ -239,10 +248,18 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
 
               const childClone = child.clone()
+
+              // 玻璃
+              const boliList = ['jz28', 'jz37', '对象031', '对象039', '对象047', 'jz291', 'jz304', 'jz82', 'jz77', 'jz264', 'jz65', 'jz57', 'jz131', 'jz57', 'jz139', 'jz258', 'jz231', 'jz245', 'jz212', 'jz226', 'jz193', 'jz207', 'jz159', 'jz173', 'jz149', 'jz117', 'jz103', 'jz16']
+              if (boliList.includes(childClone.name)) {
+                childClone.material.aoMap = null
+                childClone.material.color = new Bol3D.Color(0.8, 0.8, 0.8)
+                STATE.bloomList.push(childClone)
+              }
               childClone.material.transparent = false
-              STATE.outClickObjects.push(childClone)
               STATE.sceneList.school.add(childClone)
               child.visible = false
+              
             }
           }
         })
@@ -260,9 +277,10 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
             child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
             child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-            child.scale.y = child.scale.y * 4
+            child.scale.y = child.scale.y * 8
             STATE.sceneList.school.add(child)
             API.shader.school.initShader(child)
+            
 
           }
         })
@@ -290,7 +308,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       API.flyLines.initFlyLines()
 
 
-      console.log('STATE.bloomList: ', STATE.sceneList);
+      
+      
       STATE.bloomList.forEach(e => {
         CACHE.container.addBloom(e)
       })
@@ -305,7 +324,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
   events.ondbclick = (e) => {
 
     if (e.objects.length) {
-      console.log('e.objects[0].object: ', e.objects[0].object);
+      
+      console.log('e.objects[0]: ', e.objects[0]);
       const firstObject = e.objects[0].object
 
       // 在外场景点到主楼

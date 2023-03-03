@@ -59,6 +59,7 @@ const Shader = {
       size: 10
     }],
 
+    // 配楼的
     setCityMaterial(object) {
 
       // 确定oject的geometry的box size
@@ -82,10 +83,9 @@ const Shader = {
 
 
       Utils.forMaterial(object.material, (material) => {
-        material.opacity = 0.6;
+        material.opacity = 0.68;
         material.transparent = true;
-        material.alphaToCoverage = true;
-        material.color.setStyle("#1B3045");
+        // material.color.setStyle("#1B3045");
 
         material.onBeforeCompile = (shader) => {
           shader.uniforms.time = this.time;
@@ -321,8 +321,9 @@ const Shader = {
       line.scale.copy(object.scale);
       line.rotation.copy(object.rotation);
       line.position.copy(worldPosition);
-      CACHE.container.attach(line);
-      CACHE.container.addBloom(line)
+      STATE.sceneList.peilouLine = line
+      STATE.bloomList.push(line)
+      CACHE.container.attach(STATE.sceneList.peilouLine)
     },
 
     surroundLineShader: {
@@ -542,7 +543,7 @@ const Shader = {
           },
           time: this.time,
           uOpacity: {
-            value: 0.3
+            value: 0.6
           },
           uMax: {
             value: max,
@@ -602,7 +603,7 @@ const Shader = {
       y: { value: 0.0 },
       z: { value: 0.0 }
     },
-    UscaleY: { value: 4.0 },
+    UscaleY: { value: 8.0 },
 
     setMaterial(object) {
 
@@ -681,7 +682,7 @@ const Shader = {
 
             vec3 col = mix(baseCol, lineCol, smoothstep(0.8, .9, mask)) ;
 
-            gl_FragColor = vec4(col, 1.2 - y);
+            gl_FragColor = vec4(col, 1.1 - y);
             #include <logdepthbuf_fragment>
           `;
           shader.fragmentShader = shader.fragmentShader.replace("void main() {", fragment)

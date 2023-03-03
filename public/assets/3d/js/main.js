@@ -87874,20 +87874,23 @@ void main() {
 	        specialLayer.set(2);
 	        const materials = {};
 	        const darkMaterial = new MeshBasicMaterial({ transparent: false, opacity: 1, fog: false, color: new Color(0, 0, 0) });
+	        const darkMaterialT = new MeshBasicMaterial({ transparent: true, opacity: 0, fog: false, color: new Color(0, 0, 0) });
 	        const darkLamberMaterial = new MeshLambertMaterial({ transparent: false, opacity: 1, fog: false, color: new Color(0, 0, 0) });
+	        const darkLamberMaterialT = new MeshLambertMaterial({ transparent: true, opacity: 0, fog: false, color: new Color(0, 0, 0) });
 	        const darkSpriteMateral = new SpriteMaterial({ color: new Color(0, 0, 0), transparent: false, opacity: 1, fog: false });
+	        const darkSpriteMateralT = new SpriteMaterial({ color: new Color(0, 0, 0), transparent: true, opacity: 0, fog: false });
 	        const darkStandardMaterial = new MeshStandardMaterial({
 	            transparent: false,
 	            color: new Color(0, 0, 0),
 	            fog: false,
 	            opacity: 1
 	        });
-					const darkStandardMaterialT = new MeshStandardMaterial({
-						transparent: true,
-						color: new Color(0, 0, 0),
-						fog: false,
-						opacity: 0
-				});
+	        const darkStandardMaterialT = new MeshStandardMaterial({
+	            transparent: true,
+	            color: new Color(0, 0, 0),
+	            fog: false,
+	            opacity: 0
+	        });
 	        const darkShaderMaterial = new ShaderMaterial({
 	            lights: false,
 	            transparent: false,
@@ -87903,11 +87906,9 @@ void main() {
 	            fragmentShader: `
         #include <logdepthbuf_pars_fragment>
         #include <common>
-
-				uniform float opacity;
         
         void main(){
-          gl_FragColor = vec4(vec3(0.) , 1.);
+          gl_FragColor = vec4(vec3(0.) , 1.0);
           
           #include <logdepthbuf_fragment>
           #include <tonemapping_fragment>
@@ -87923,43 +87924,48 @@ void main() {
 	                useMap: { value: false }
 	            }
 	        });
-					const darkShaderMaterialT = new ShaderMaterial({
-						lights: false,
-						transparent: true,
-						fog: false,
-						vertexShader: `
-			#include <logdepthbuf_pars_vertex>
-			#include <common>
-			void main(){
-					gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-					#include <logdepthbuf_vertex>
-			}
-		`,
-						fragmentShader: `
-			#include <logdepthbuf_pars_fragment>
-			#include <common>
-
-			uniform float opacity;
-			
-			void main(){
-				gl_FragColor = vec4(vec3(0.) , 0.);
-				
-				#include <logdepthbuf_fragment>
-				#include <tonemapping_fragment>
-			}
-		`,
-						uniforms: {
-								diffuse: { value: new Color(0, 0, 0) },
-								gradient: { value: new Color(0, 0, 0) },
-								color: { value: new Color(0, 0, 0) },
-								emissive: { value: new Color(0, 0, 0) },
-								opacity: { value: 0 },
-								map: { value: null },
-								useMap: { value: false }
-						}
-				});
+	        const darkShaderMaterialT = new ShaderMaterial({
+	            lights: false,
+	            transparent: true,
+	            fog: false,
+	            vertexShader: `
+        #include <logdepthbuf_pars_vertex>
+        #include <common>
+        void main(){
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            #include <logdepthbuf_vertex>
+        }
+      `,
+	            fragmentShader: `
+        #include <logdepthbuf_pars_fragment>
+        #include <common>
+        
+        void main(){
+          gl_FragColor = vec4(vec3(0.) , 0.0);
+          
+          #include <logdepthbuf_fragment>
+          #include <tonemapping_fragment>
+        }
+      `,
+	            uniforms: {
+	                diffuse: { value: new Color(0, 0, 0) },
+	                gradient: { value: new Color(0, 0, 0) },
+	                color: { value: new Color(0, 0, 0) },
+	                emissive: { value: new Color(0, 0, 0) },
+	                opacity: { value: 0 },
+	                map: { value: null },
+	                useMap: { value: false }
+	            }
+	        });
 	        const darkLineMaterial = new LineBasicMaterial({
 	            color: '#000000',
+	            transparent: false,
+	            opacity: 1
+	        });
+	        const darkLineMaterialT = new LineBasicMaterial({
+	            color: '#000000',
+	            transparent: true,
+	            opacity: 0
 	        });
 	        attrs && attrs.enableShadow != undefined ? attrs.enableShadow : false;
 	        const animation = () => {
@@ -87975,40 +87981,27 @@ void main() {
 	                            // 做特殊处理， 此阶段换黑色材质渲染， 不然深度会有问题，无法正确展示和bloom物体的遮挡关系
 	                            if (!materials[obj.uuid])
 	                                materials[obj.uuid] = obj.material;
-	                            
-															if (Array.isArray(obj.material)) {
+	                            if (Array.isArray(obj.material)) {
 	                                // eg. sky cube: MeshBasicMaterial[]
 	                                obj.material = [darkMaterial, darkMaterial, darkMaterial, darkMaterial, darkMaterial, darkMaterial];
 	                            }
 	                            else if (obj.material instanceof MeshBasicMaterial) {
-	                                obj.material = darkMaterial;
+	                                obj.material = obj.material.transparent ? darkMaterialT : darkMaterial;
 	                            }
 	                            else if (obj.material instanceof MeshLambertMaterial) {
-	                                obj.material = darkLamberMaterial;
+	                                obj.material = obj.material.transparent ? darkLamberMaterialT : darkLamberMaterial;
 	                            }
 	                            else if (obj.material instanceof SpriteMaterial) {
-	                                obj.material = darkSpriteMateral;
+	                                obj.material = obj.material.transparent ? darkSpriteMateralT : darkSpriteMateral;
 	                            }
 	                            else if (obj.material instanceof MeshStandardMaterial) {
-																if(obj.material.transparent){
-																	obj.material = darkStandardMaterialT
-																}else{
-																	obj.material = darkStandardMaterial
-																}
+	                                obj.material = obj.material.transparent ? darkStandardMaterialT : darkStandardMaterial;
 	                            }
 	                            else if (obj.material instanceof LineBasicMaterial) {
-	                                obj.material = darkLineMaterial;
+	                                obj.material = obj.material.transparent ? darkLineMaterialT : darkLineMaterial;
 	                            }
 	                            else if (obj.material instanceof ShaderMaterial) {
-	                                // const shaderMatClone = darkShaderMaterial.clone();
-	                                // shaderMatClone.vertexShader = obj.material.vertexShader
-	                                // shaderMatClone.fragmentShader = obj.material.fragmentShader
-																	// shaderMatClone.uniforms = obj.material.uniforms
-																	if(obj.material.transparent){
-																		obj.material = darkShaderMaterialT
-																	}else{
-																		obj.material = darkShaderMaterial;
-																	}
+	                                obj.material = obj.material.transparent ? darkShaderMaterialT : darkShaderMaterial;
 	                                if (obj.isWater || obj.isReflector) {
 	                                    obj.visible = false;
 	                                }
@@ -88018,9 +88011,8 @@ void main() {
 	                    self.bloomComposer.render();
 	                    self.scene.traverse((obj) => {
 	                        if (materials[obj.uuid]) {
-	                            if (obj.isWater || obj.isReflector){
-																obj.visible = true;
-															}
+	                            if (obj.isWater || obj.isReflector)
+	                                obj.visible = true;
 	                            obj.material = materials[obj.uuid];
 	                            delete materials[obj.uuid];
 	                        }

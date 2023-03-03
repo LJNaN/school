@@ -24,6 +24,7 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 
 <style scoped lang ='scss'>
 .foot {
+  pointer-events: all;
   position: absolute;
   left: vw(754);
   bottom: vh(81);
