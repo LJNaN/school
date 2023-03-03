@@ -109,6 +109,7 @@ const learningRecordData2 = [
 <style 
 scoped lang ='scss'>
 .right {
+  pointer-events: all;
   width: vw(380);
   height: vh(993);
   position: absolute;

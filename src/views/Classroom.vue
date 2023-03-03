@@ -77,6 +77,7 @@ onMounted(() => {
 
 <style scoped lang="less">
 .classroom {
+  pointer-events: none;
   position: fixed;
   height: 100vh;
   width: 100vw;

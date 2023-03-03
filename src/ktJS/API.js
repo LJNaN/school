@@ -378,7 +378,7 @@ function enterClassRoom(classRoomName) {
   STATE.sceneList.flyLine.visible = false
   STATE.sceneList.carLine.visible = false
 
-  router.push("/classroom?id=" + classRoomName)
+  router.push("/SmartEducationInner?id=" + classRoomName)
 }
 
 /**

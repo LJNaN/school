@@ -25,6 +25,7 @@ const iconTitle = [
 
 <style scoped lang ='scss'>
 .iconTitle {
+  pointer-events: all;
   width: vw(100);
   position: absolute;
   top: vh(100);

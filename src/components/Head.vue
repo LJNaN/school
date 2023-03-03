@@ -7,6 +7,7 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 
 <style scoped lang ='scss'>
 .head {
+  pointer-events: all;
   position: fixed;
   width: 100vw;
   height: vh(86);

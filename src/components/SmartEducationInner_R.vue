@@ -1,6 +1,14 @@
 <script setup>
-import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import { reactive, ref, toRefs, onBeforeMount, onMounted, watch } from "vue";
+import { useRoute } from 'vue-router'
 import Container from "./Container.vue";
+import { API } from '@/ktJS/API'
+import { STATE } from '@/ktJS/STATE'
+
+const route = useRoute()
+const classRoomName = route.query?.id || ''
+
+
 //设备运行状况数据
 const equipmentSituationData = [
   { name: "照明", total: "35", open: "35", close: "35", offline: "13" },
@@ -9,10 +17,37 @@ const equipmentSituationData = [
   { name: "新风设备", total: "35", open: "13", close: "26", offline: "35" },
 ];
 //设备调节
-const curtain = ref(true);
-const screen = ref(false);
-const brightness = ref(100);
-const temperature = ref(100);
+const equipmentControl = ref({
+  curtain: true,
+  screen: true,
+  brightness: 100,
+  temperature: 26
+})
+
+if (classRoomName) {
+  API.classRoom.currentClassRoomName = classRoomName
+  if(API.classRoom.info.name != classRoomName) {
+    API.classRoom.info = STATE.classRoomInfo.find(e => e.name === classRoomName)
+  }
+  
+  watch(() => JSON.parse(JSON.stringify(equipmentControl.value)), (newData, oldData) => {
+    if (oldData) {
+      if (newData.curtain != oldData.curtain) API.classRoom.curtain(newData.curtain)
+      if (newData.screen != oldData.screen) API.classRoom.screen(newData.screen)
+      if (newData.brightness != oldData.brightness) API.classRoom.brightness(newData.brightness)
+      if (newData.temperature != oldData.temperature) API.classRoom.temperature(newData.temperature)
+    } else {
+      // API.classRoom.curtain(newData.curtain)
+      API.classRoom.screen(newData.screen)
+      API.classRoom.brightness(newData.brightness)
+      API.classRoom.temperature(newData.temperature)
+    }
+  }, {
+    immediate: true,
+    deep: true
+  })
+}
+
 
 //监控数据
 const monitorData = [
@@ -62,8 +97,8 @@ const monitorData = [
     <container title="设备调节">
       <div class="equipmentAdjustment">
         <div class="button">
-          <div><span>窗帘</span> <el-switch v-model="curtain"></el-switch></div>
-          <div><span>屏幕</span> <el-switch v-model="screen"></el-switch></div>
+          <div><span>窗帘</span> <el-switch v-model="equipmentControl.curtain"></el-switch></div>
+          <div><span>屏幕</span> <el-switch v-model="equipmentControl.screen"></el-switch></div>
         </div>
         <div class="slider">
           <div style="display: flex">
@@ -73,7 +108,7 @@ const monitorData = [
             />
             <div>
               <p>亮度</p>
-              <el-slider v-model="brightness" :show-tooltip="false"></el-slider>
+              <el-slider v-model="equipmentControl.brightness" :min="5" :max="100" :show-tooltip="false"></el-slider>
             </div>
           </div>
           <div style="display: flex">
@@ -83,10 +118,7 @@ const monitorData = [
             />
             <div>
               <p>温度</p>
-              <el-slider
-                v-model="temperature"
-                :show-tooltip="false"
-              ></el-slider>
+              <el-slider v-model="equipmentControl.temperature" :min="-10" :max="45" :show-tooltip="false"></el-slider>
             </div>
           </div>
         </div>
@@ -115,6 +147,7 @@ const monitorData = [
 
 <style scoped lang ='scss'>
 .right {
+  pointer-events: all;
   width: vw(380);
   height: vh(993);
   position: absolute;

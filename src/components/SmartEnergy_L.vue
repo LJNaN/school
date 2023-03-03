@@ -286,6 +286,7 @@ onUnmounted(() => {
 
 <style scoped lang ='scss'>
 .left {
+  pointer-events: all;
   width: vw(380);
   height: vh(993);
   position: absolute;

@@ -27,6 +27,7 @@ const iconTitle = [
 .iconTitle {
   width: vw(100);
   position: absolute;
+  pointer-events: all;
   top: vh(100);
   right: vw(424);
   li {

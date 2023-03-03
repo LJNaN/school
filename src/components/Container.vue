@@ -11,6 +11,7 @@ const props = defineProps({ title: String });
 
 <style scoped lang ='scss'>
 .title {
+  pointer-events: all;
   width: vw(204);
   height: vh(28);
   margin: 0 auto;
