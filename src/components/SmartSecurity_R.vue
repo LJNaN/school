@@ -3,10 +3,26 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
 //实时监控数据
 const monitorData = [
-  { id: "01", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "02", name: "南门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "03", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "04", name: "图书馆2楼自习室", url: "./assets/2d/img/监控视频@2x.png" },
+  {
+    id: "01",
+    name: "北门安保室",
+    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+  },
+  {
+    id: "02",
+    name: "南门安保室",
+    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+  },
+  {
+    id: "03",
+    name: "北门安保室",
+    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+  },
+  {
+    id: "04",
+    name: "图书馆2楼自习室",
+    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+  },
 ];
 //值班保卫信息数据
 const securityData = [
@@ -107,7 +123,7 @@ const parkData = {
           v-for="(item, index) in securityData"
           :key="index"
           :style="{
-            background: 'url(/assets/2d/img/圆角矩形@2x.png)',
+            background: 'url(/assets/2d/img/smartSecurity/圆角矩形@2x.png)',
             backgroundSize: '100% 100%',
           }"
         >
@@ -334,7 +350,7 @@ const parkData = {
 
         justify-content: center;
         align-items: center;
-        background: url("/assets/2d/img/监控底部@2x.png");
+        background: url("/assets/2d/img/smartSecurity/监控底部@2x.png");
         background-size: 100% 100%;
         :first-child {
           width: 10%;

@@ -1,5 +1,12 @@
 <script setup>
-import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import {
+  reactive,
+  ref,
+  toRefs,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import Container from "./Container.vue";
 import * as echarts from "echarts";
 const todayPowerEchartsData = ref(null);
@@ -7,37 +14,37 @@ const todayPowerData = [
   {
     name: "照明设备",
     value: "426",
-    imgUrl: "/assets/2d/img/照明设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/照明设备@2x.png",
     Echarts: "",
   },
   {
     name: "空调设备",
     value: "426",
-    imgUrl: "/assets/2d/img/空调设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/空调设备@2x.png",
     Echarts: "",
   },
   {
     name: "显示设备",
     value: "426",
-    imgUrl: "/assets/2d/img/显示设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/显示设备@2x.png",
     Echarts: "",
   },
   {
     name: "插座",
     value: "426",
-    imgUrl: "/assets/2d/img/插座设备@2x.png",
+    imgUrl: "/assets/2d/img/smartEnergy/插座设备@2x.png",
     Echarts: "",
   },
 ];
-const dataY = [];
-for (let i = 0; i <= 20; i++) {
-  dataY.push(Math.ceil(Math.random() * 10));
-}
-const dataX = [];
-for (let i = 0; i < 20; i++) {
-  dataX.push(`${i}`);
-}
-const option = {
+//今日耗电echarts
+let todayPowerEcharts1 = null;
+let todayPowerEcharts2 = null;
+let todayPowerEcharts3 = null;
+let todayPowerEcharts4 = null;
+const dataY = ref([
+  1, 5, 7, 12, 4, 16, 2, 8, 5, 9, 16, 18, 14, 17, 9, 14, 4, 13, 10, 9,
+]);
+const option = reactive({
   grid: {
     left: "3%",
     top: "3%",
@@ -46,7 +53,9 @@ const option = {
   },
 
   xAxis: {
-    data: dataX,
+    data: [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    ],
     boundaryGap: false,
     axisLabel: false,
     axisTick: false,
@@ -71,11 +80,13 @@ const option = {
       },
     },
   ],
-};
+});
 
 //消防检测echarts
 const energyConsumeData = ref(null);
-const energyConsumeOption = {
+let energyConsumeEcharts = null;
+let dataB = ref([820, 1750, 2100, 3150, 3300, 3450, 4200]);
+const energyConsumeOption = reactive({
   // backgroundColor: "#051C43",
   tooltip: {
     trigger: "axis",
@@ -97,6 +108,7 @@ const energyConsumeOption = {
     x2: 20,
     y2: 20,
     top: "2%",
+    right: "15%",
     bottom: "12%",
   },
   xAxis: {
@@ -161,7 +173,7 @@ const energyConsumeOption = {
       name: "",
       type: "bar",
       barWidth: 9,
-      data: [820, 1750, 2100, 3150, 3300, 3450, 4200],
+      data: dataB,
       // barCategoryGap:"20%",
       itemStyle: {
         normal: {
@@ -180,29 +192,58 @@ const energyConsumeOption = {
       },
     },
   ],
-};
+});
+
+//echarts动态和自适应
+const timer = setInterval(() => {
+  dataY.value = dataY.value.map(() => Math.ceil(Math.random() * 20));
+  dataB.value = dataB.value.map(() => 1000 + Math.ceil(Math.random() * 3000));
+  // dataS.value = dataS.value.map(() => Math.ceil(Math.random() * 50));
+  // dataQ.value = dataQ.value.map(() => Math.ceil(Math.random() * 50));
+  if (todayPowerEcharts1 != null) {
+    todayPowerEcharts1.setOption(option);
+  }
+  if (todayPowerEcharts2 != null) {
+    todayPowerEcharts2.setOption(option);
+  }
+  if (todayPowerEcharts3 != null) {
+    todayPowerEcharts3.setOption(option);
+  }
+  if (todayPowerEcharts4 != null) {
+    todayPowerEcharts4.setOption(option);
+  }
+  if (energyConsumeEcharts != null) {
+    energyConsumeEcharts.setOption(energyConsumeOption);
+  }
+}, 2000);
+
+function echartsResize() {
+  todayPowerEcharts1.resize();
+  todayPowerEcharts2.resize();
+  todayPowerEcharts3.resize();
+  todayPowerEcharts4.resize();
+
+  energyConsumeEcharts.resize();
+}
 
 onMounted(() => {
-  var todayPowerEcharts1 = echarts.init(todayPowerEchartsData.value[0]);
+  todayPowerEcharts1 = echarts.init(todayPowerEchartsData.value[0]);
   todayPowerEcharts1.setOption(option);
-  var todayPowerEcharts2 = echarts.init(todayPowerEchartsData.value[1]);
+  todayPowerEcharts2 = echarts.init(todayPowerEchartsData.value[1]);
   todayPowerEcharts2.setOption(option);
-  var todayPowerEcharts3 = echarts.init(todayPowerEchartsData.value[2]);
+  todayPowerEcharts3 = echarts.init(todayPowerEchartsData.value[2]);
   todayPowerEcharts3.setOption(option);
-  var todayPowerEcharts4 = echarts.init(todayPowerEchartsData.value[3]);
+  todayPowerEcharts4 = echarts.init(todayPowerEchartsData.value[3]);
   todayPowerEcharts4.setOption(option);
 
-  const energyConsumeEcharts = echarts.init(energyConsumeData.value);
+  energyConsumeEcharts = echarts.init(energyConsumeData.value);
   energyConsumeEcharts.setOption(energyConsumeOption);
 
-  window.addEventListener("resize", () => {
-    todayPowerEcharts1.resize();
-    todayPowerEcharts2.resize();
-    todayPowerEcharts3.resize();
-    todayPowerEcharts4.resize();
-
-    energyConsumeEcharts.resize();
-  });
+  window.addEventListener("resize", echartsResize);
+});
+onUnmounted(() => {
+  clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>

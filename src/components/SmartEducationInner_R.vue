@@ -16,10 +16,26 @@ const temperature = ref(100);
 
 //监控数据
 const monitorData = [
-  { id: "01", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "02", name: "南门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "03", name: "北门安保室", url: "./assets/2d/img/监控视频@2x.png" },
-  { id: "04", name: "图书馆2楼自习室", url: "./assets/2d/img/监控视频@2x.png" },
+  {
+    id: "01",
+    name: "北门安保室",
+    url: "./assets/2d/img/smartEducationInner/监控视频@2x.png",
+  },
+  {
+    id: "02",
+    name: "南门安保室",
+    url: "./assets/2d/img/smartEducationInner/监控视频@2x.png",
+  },
+  {
+    id: "03",
+    name: "北门安保室",
+    url: "./assets/2d/img/smartEducationInner/监控视频@2x.png",
+  },
+  {
+    id: "04",
+    name: "图书馆2楼自习室",
+    url: "./assets/2d/img/smartEducationInner/监控视频@2x.png",
+  },
 ];
 </script>
 <template>
@@ -51,14 +67,20 @@ const monitorData = [
         </div>
         <div class="slider">
           <div style="display: flex">
-            <img src="/assets/2d/img/亮度@2x.png" class="icon" />
+            <img
+              src="/assets/2d/img/smartEducationInner/亮度@2x.png"
+              class="icon"
+            />
             <div>
               <p>亮度</p>
               <el-slider v-model="brightness" :show-tooltip="false"></el-slider>
             </div>
           </div>
           <div style="display: flex">
-            <img src="/assets/2d/img/温度@2x.png" class="icon" />
+            <img
+              src="/assets/2d/img/smartEducationInner/温度@2x.png"
+              class="icon"
+            />
             <div>
               <p>温度</p>
               <el-slider
@@ -119,7 +141,7 @@ const monitorData = [
         display: inline-block;
         width: vw(20);
         height: vh(20);
-        background: url("/assets/2d/img/blueDot@2x.png");
+        background: url("/assets/2d/img/smartEducationInner/blueDot@2x.png");
         background-size: 100% 100%;
       }
       .green::before {
@@ -127,7 +149,7 @@ const monitorData = [
         display: inline-block;
         width: vw(20);
         height: vh(20);
-        background: url("/assets/2d/img/greenDot@2x.png");
+        background: url("/assets/2d/img/smartEducationInner/greenDot@2x.png");
         background-size: 100% 100%;
       }
       .orange::before {
@@ -135,7 +157,7 @@ const monitorData = [
         display: inline-block;
         width: vw(20);
         height: vh(20);
-        background: url("/assets/2d/img/orangeDot@2x.png");
+        background: url("/assets/2d/img/smartEducationInner/orangeDot@2x.png");
         background-size: 100% 100%;
       }
       .gray::before {
@@ -143,11 +165,11 @@ const monitorData = [
         display: inline-block;
         width: vw(20);
         height: vh(20);
-        background: url("/assets/2d/img/orangeDot@2x.png");
+        background: url("/assets/2d/img/smartEducationInner/orangeDot@2x.png");
         background-size: 100% 100%;
       }
       &:nth-child(n + 2) {
-        background: url("/assets/2d/img/圆角矩形@2x.png");
+        background: url("/assets/2d/img/smartEducationInner/圆角矩形@2x.png");
         background-size: 100% 100%;
       }
     }
@@ -203,7 +225,7 @@ const monitorData = [
         height: vh(23);
         justify-content: center;
         align-items: center;
-        background: url("/assets/2d/img/监控底部@2x.png");
+        background: url("/assets/2d/img/smartEducationInner/监控底部@2x.png");
         background-size: 100% 100%;
         :first-child {
           width: 10%;

@@ -1,5 +1,13 @@
 <script setup>
-import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
+import {
+  reactive,
+  ref,
+  toRefs,
+  onBeforeMount,
+  onMounted,
+  watch,
+  onUnmounted,
+} from "vue";
 import Container from "./Container.vue";
 import * as echarts from "echarts";
 
@@ -12,8 +20,10 @@ const securityData = [
   { id: "05", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
 ];
 
+let datanv = ref([40, 30, 80, 30, 50, 20, 40, 20, 10]);
+let datanan = ref([80, 40, 40, 100, 35, 30, 30, 20, 20]);
 const warningAnalysisData = ref(null);
-const warningAnalysisOption = {
+let warningAnalysisOption = reactive({
   // backgroundColor: "#111b29",
   color: ["#3D91F7", "#61BE67"],
   tooltip: {
@@ -98,7 +108,7 @@ const warningAnalysisOption = {
   series: [
     {
       type: "radar",
-      symbolSize: 10,
+      symbolSize: 5,
       itemStyle: {
         borderColor: "rgba(66, 242, 185, 1)",
         color: "#fff",
@@ -113,7 +123,7 @@ const warningAnalysisOption = {
       data: [
         {
           // TODO:
-          value: [80, 40, 40, 100, 35, 30, 30, 20, 20],
+          value: datanan,
           name: "男",
           areaStyle: {
             normal: {
@@ -147,7 +157,7 @@ const warningAnalysisOption = {
         },
         {
           // TODO:
-          value: [40, 70, 50, 60, 30, 80, 30, 50, 20],
+          value: datanv,
           name: "女",
           itemStyle: {
             borderColor: "rgba(245, 196, 85, 1)",
@@ -193,22 +203,37 @@ const warningAnalysisOption = {
       ],
     },
   ],
-};
+});
+let warningAnalysisEcharts = null;
+//echarts动态和自适应
+let timer = setInterval(() => {
+  datanv.value = datanv.value.map(() => 40 + Math.ceil(Math.random() * 50));
+  datanan.value = datanv.value.map(() => 40 + Math.ceil(Math.random() * 50));
+  if (warningAnalysisEcharts != null) {
+    warningAnalysisEcharts.setOption(warningAnalysisOption);
+  }
+}, 2000);
+function echartsResize() {
+  warningAnalysisEcharts.resize();
+}
 
 onMounted(() => {
-  const warningAnalysisEcharts = echarts.init(warningAnalysisData.value);
+  warningAnalysisEcharts = echarts.init(warningAnalysisData.value);
   warningAnalysisEcharts.setOption(warningAnalysisOption);
   //echart自适应
-  window.addEventListener("resize", () => {
-    warningAnalysisEcharts.resize();
-  });
+  window.addEventListener("resize", echartsResize);
+});
+
+onUnmounted(() => {
+  clearInterval(timer);
+  window.removeEventListener("resize", echartsResize);
 });
 </script>
 <template>
   <div class="left">
     <Container title="园区概况">
       <div class="parkProfile">
-        <div class="img"></div>
+        <img src="/assets/2d/img/smartSchool/园区图片.png" />
         <P
           >学校历来重视党的建设和思想政治工作，坚持以习近平新时代中国特色社会主义思想为指导，全面贯彻落实党的十九大和十九届历次全会精神，切实加强党对高校的全面领导，坚定不移落实全面从严治党主体责任，全面贯彻执行党的教育方针，落实立德树人根本任务，确保党的意志主张在高校落地生根，确保学校始终成为培养社会主义建设者和接班人的坚强阵地。</P
         >
@@ -230,7 +255,7 @@ onMounted(() => {
           v-for="(item, index) in securityData"
           :key="index"
           :style="{
-            background: 'url(/assets/2d/img/圆角矩形@2x.png)',
+            background: 'url(/assets/2d/img/smartSchool/圆角矩形@2x.png)',
             backgroundSize: '100% 100%',
           }"
         >
@@ -253,11 +278,10 @@ onMounted(() => {
   top: vh(56);
   .parkProfile {
     margin: vh(21) 0 vh(46) 0;
-    .img {
+    img {
       width: vw(350);
       height: vh(100);
       margin: 0 auto;
-      border: 1px solid red;
     }
     p {
       margin-top: vh(16);
