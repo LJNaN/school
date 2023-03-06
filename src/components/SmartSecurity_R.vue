@@ -123,7 +123,7 @@ const parkData = {
           v-for="(item, index) in securityData"
           :key="index"
           :style="{
-            background: 'url(/assets/2d/img/smartSecurity/圆角矩形@2x.png)',
+            background: 'url(./assets/2d/img/smartSecurity/圆角矩形@2x.png)',
             backgroundSize: '100% 100%',
           }"
         >

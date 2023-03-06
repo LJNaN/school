@@ -252,12 +252,12 @@ onUnmounted(() => {
       <div class="energyManage">
         <div>
           <p class="value">1253</p>
-          <img src="assets/2d/img/水能@2x.png" />
+          <img :src="'./assets/2d/img/水能@2x.png'" />
           <P class="name">水能消耗(ML)</P>
         </div>
         <div>
           <p class="value">1253</p>
-          <img src="assets/2d/img/电能@2x.png" />
+          <img :src="'./assets/2d/img/电能@2x.png'" />
           <P class="name">电能消耗(KW)</P>
         </div>
       </div>

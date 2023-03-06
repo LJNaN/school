@@ -110,7 +110,7 @@ const flyLineConfig = [
       653, 600, -582
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -121,7 +121,7 @@ const flyLineConfig = [
       255, 600, -586
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -132,7 +132,7 @@ const flyLineConfig = [
       -88, 600, -588
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -143,7 +143,7 @@ const flyLineConfig = [
       -528, 600, -582
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -154,7 +154,7 @@ const flyLineConfig = [
       -540, 600, -298
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -165,7 +165,7 @@ const flyLineConfig = [
       -553, 600, 222
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -176,7 +176,7 @@ const flyLineConfig = [
       -571, 600, 589
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -187,7 +187,7 @@ const flyLineConfig = [
       -224, 600, 612
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -198,7 +198,7 @@ const flyLineConfig = [
       188, 600, 615
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -209,7 +209,7 @@ const flyLineConfig = [
       605, 600, 618
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -220,7 +220,7 @@ const flyLineConfig = [
       631, 600, 217
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 4,
     speed: 0.005
@@ -231,7 +231,7 @@ const flyLineConfig = [
       639, 600, -184
     ],
     radius: 1,
-    imgUrl: '/assets/3d/img/flyline1.png',
+    imgUrl: './assets/3d/img/flyline1.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.005
@@ -243,7 +243,7 @@ const flyLineConfig = [
       289, 0, -801
     ],
     radius: 0.9,
-    imgUrl: '/assets/3d/img/flyline2.png',
+    imgUrl: './assets/3d/img/flyline2.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.02
@@ -256,7 +256,7 @@ const flyLineConfig = [
       132, 0, -12
     ],
     radius: 0.9,
-    imgUrl: '/assets/3d/img/flyline2.png',
+    imgUrl: './assets/3d/img/flyline2.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.02
@@ -270,7 +270,7 @@ const flyLineConfig = [
       -280, 0, 30
     ],
     radius: 0.9,
-    imgUrl: '/assets/3d/img/flyline2.png',
+    imgUrl: './assets/3d/img/flyline2.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.02
@@ -281,7 +281,7 @@ const flyLineConfig = [
       -149, 0, 26
     ],
     radius: 0.9,
-    imgUrl: '/assets/3d/img/flyline2.png',
+    imgUrl: './assets/3d/img/flyline2.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.02
@@ -292,7 +292,7 @@ const flyLineConfig = [
       286, 0, 227
     ],
     radius: 0.9,
-    imgUrl: '/assets/3d/img/flyline2.png',
+    imgUrl: './assets/3d/img/flyline2.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.02
@@ -303,7 +303,7 @@ const flyLineConfig = [
       -274, 0, 851
     ],
     radius: 0.9,
-    imgUrl: '/assets/3d/img/flyline2.png',
+    imgUrl: './assets/3d/img/flyline2.png',
     flowDirection: 'x',
     repeat: 1.2,
     speed: 0.02
