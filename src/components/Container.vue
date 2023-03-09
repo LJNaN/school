@@ -17,7 +17,7 @@ const props = defineProps({ title: String });
   margin: 0 auto;
   font-size: rem(18);
   text-align: center;
-  background: url("/assets/2d/img/标题框@2x.png");
+  background: url("/assets/2d/img/2.png");
   background-size: 100% 100%;
 }
 </style>

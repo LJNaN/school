@@ -14,22 +14,22 @@ const teachSituationData = [
   {
     name: "上课教师人数",
     value: "282",
-    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看1.png",
+    imgUrl: "./assets/2d/img/smartEducationOuter/8.png",
   },
   {
     name: "上课学生人数",
     value: "290",
-    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看1.png",
+    imgUrl: "./assets/2d/img/smartEducationOuter/8.png",
   },
   {
     name: "涉及课程门类",
     value: "302",
-    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看2.png",
+    imgUrl: "./assets/2d/img/smartEducationOuter/9.png",
   },
   {
     name: "授课学院数量",
     value: "322",
-    imgUrl: "/assets/2d/img/smartEducationOuter/教学情况查看3.png",
+    imgUrl: "./assets/2d/img/smartEducationOuter/10.png",
   },
 ];
 //停车场占用率数据
@@ -159,7 +159,7 @@ const roomUsageData = [];
 for (let i = 0; i < 32; i++) {
   roomUsageData.push({
     name: "1F",
-    imgUrl: `/assets/2d/img/smartEducationOuter/room${Math.ceil(
+    imgUrl: `./assets/2d/img/smartEducationOuter/room${Math.ceil(
       Math.random() * 3
     )}.png`,
   });

@@ -1,9 +1,9 @@
 <script setup>
 import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 const iconTitle = [
-  { name: "门禁", url: "./assets/2d/img/icon/门禁@2x.png" },
-  { name: "监控", url: "./assets/2d/img/icon/监控@2x.png" },
-  { name: "保卫处", url: "./assets/2d/img/icon/保卫处@2x.png" },
+  { name: "门禁", url: "./assets/2d/img/icon/4.png" },
+  { name: "监控", url: "./assets/2d/img/icon/5.png" },
+  { name: "保卫处", url: "./assets/2d/img/icon/6.png" },
 ];
 </script>
 <template>

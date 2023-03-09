@@ -14,25 +14,25 @@ const todayPowerData = [
   {
     name: "照明设备",
     value: "426",
-    imgUrl: "/assets/2d/img/smartEnergy/照明设备@2x.png",
+    imgUrl: "./assets/2d/img/smartEnergy/1.png",
     Echarts: "",
   },
   {
     name: "空调设备",
     value: "426",
-    imgUrl: "/assets/2d/img/smartEnergy/空调设备@2x.png",
+    imgUrl: "./assets/2d/img/smartEnergy/2.png",
     Echarts: "",
   },
   {
     name: "显示设备",
     value: "426",
-    imgUrl: "/assets/2d/img/smartEnergy/显示设备@2x.png",
+    imgUrl: "./assets/2d/img/smartEnergy/3.png",
     Echarts: "",
   },
   {
     name: "插座",
     value: "426",
-    imgUrl: "/assets/2d/img/smartEnergy/插座设备@2x.png",
+    imgUrl: "./assets/2d/img/smartEnergy/4.png",
     Echarts: "",
   },
 ];
@@ -252,12 +252,12 @@ onUnmounted(() => {
       <div class="energyManage">
         <div>
           <p class="value">1253</p>
-          <img :src="'./assets/2d/img/水能@2x.png'" />
+          <img :src="'./assets/2d/img/3.png'" />
           <P class="name">水能消耗(ML)</P>
         </div>
         <div>
           <p class="value">1253</p>
-          <img :src="'./assets/2d/img/电能@2x.png'" />
+          <img :src="'./assets/2d/img/4.png'" />
           <P class="name">电能消耗(KW)</P>
         </div>
       </div>

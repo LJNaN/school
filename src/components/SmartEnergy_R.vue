@@ -367,7 +367,7 @@ onUnmounted(() => {
         .yellow {
           width: vw(163);
           height: vh(54);
-          background: url("/assets/2d/img/smartEnergy/能源分类消耗Y@2x.png");
+          background: url("/assets/2d/img/smartEnergy/5.png");
           background-size: 100% 100%;
           font-size: rem(27);
           line-height: 54px;
@@ -382,7 +382,7 @@ onUnmounted(() => {
           font-size: rem(27);
           line-height: 54px;
           color: #3baaffff;
-          background: url("/assets/2d/img/smartEnergy/能源分类消耗B@2x.png");
+          background: url("/assets/2d/img/smartEnergy/6.png");
           background-size: 100% 100%;
           span {
             font-size: rem(14);
@@ -448,7 +448,7 @@ onUnmounted(() => {
       li {
         width: 100%;
         height: vh(34);
-        background: url("/assets/2d/img/smartEnergy/矩形560拷贝6@2x.png");
+        background: url("/assets/2d/img/smartEnergy/7.png");
         background-size: 100% 100%;
         display: flex;
         justify-content: space-around;

@@ -255,7 +255,7 @@ onUnmounted(() => {
           v-for="(item, index) in securityData"
           :key="index"
           :style="{
-            background: 'url(./assets/2d/img/smartSchool/圆角矩形@2x.png)',
+            background: 'url(./assets/2d/img/smartSchool/1.png)',
             backgroundSize: '100% 100%',
           }"
         >

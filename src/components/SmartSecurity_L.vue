@@ -520,7 +520,7 @@ onUnmounted(() => {
     .dayVisitor {
       width: vw(154);
       height: vh(38);
-      background: url("/assets/2d/img/smartSecurity/底@2x.png");
+      background: url("/assets/2d/img/smartSecurity/1.png");
       background-size: 100% 100%;
       flex: 1;
       display: flex;
@@ -534,7 +534,7 @@ onUnmounted(() => {
     .weekVisitor {
       width: vw(154);
       height: vh(38);
-      background: url("/assets/2d/img/smartSecurity/底@2x.png");
+      background: url("/assets/2d/img/smartSecurity/1.png");
       background-size: 100% 100%;
       flex: 1;
       display: flex;

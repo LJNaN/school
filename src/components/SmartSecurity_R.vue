@@ -6,22 +6,22 @@ const monitorData = [
   {
     id: "01",
     name: "北门安保室",
-    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+    url: "./assets/2d/img/smartSecurity/2.png",
   },
   {
     id: "02",
     name: "南门安保室",
-    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+    url: "./assets/2d/img/smartSecurity/2.png",
   },
   {
     id: "03",
     name: "北门安保室",
-    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+    url: "./assets/2d/img/smartSecurity/2.png",
   },
   {
     id: "04",
     name: "图书馆2楼自习室",
-    url: "./assets/2d/img/smartSecurity/监控视频@2x.png",
+    url: "./assets/2d/img/smartSecurity/2.png",
   },
 ];
 //值班保卫信息数据
@@ -123,7 +123,7 @@ const parkData = {
           v-for="(item, index) in securityData"
           :key="index"
           :style="{
-            background: 'url(./assets/2d/img/smartSecurity/圆角矩形@2x.png)',
+            background: 'url(./assets/2d/img/smartSecurity/3.png)',
             backgroundSize: '100% 100%',
           }"
         >
@@ -351,7 +351,7 @@ const parkData = {
 
         justify-content: center;
         align-items: center;
-        background: url("/assets/2d/img/smartSecurity/监控底部@2x.png");
+        background: url("/assets/2d/img/smartSecurity/4.png");
         background-size: 100% 100%;
         :first-child {
           width: 10%;

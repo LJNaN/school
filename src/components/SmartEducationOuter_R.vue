@@ -7,19 +7,19 @@ const resourceUseageData = [
     name: "音频文件",
     today: "1.235",
     total: "1.235",
-    url: "/assets/2d/img/smartEducationOuter/音频文件2@2x.png",
+    url: "./assets/2d/img/smartEducationOuter/1.png",
   },
   {
     name: "文档文件",
     today: "1.235",
     total: "1.235",
-    url: "/assets/2d/img/smartEducationOuter/文档文件2@2x.png",
+    url: "./assets/2d/img/smartEducationOuter/2.png",
   },
   {
     name: "教学活动",
     today: "1.235",
     total: "1.235",
-    url: "/assets/2d/img/smartEducationOuter/教学活动2@2x.png",
+    url: "./assets/2d/img/smartEducationOuter/3.png",
   },
 ];
 //7日学习记录数据
@@ -42,7 +42,7 @@ const learningRecordData2 = [
         <span class="yellow">3.17%</span>
       </div>
       <div class="teacherUsage">
-        <img src="/assets/2d/img/smartEducationOuter/组17@2x.png" />
+        <img src="/assets/2d/img/smartEducationOuter/7.png" />
         <ul class="eventProportion">
           <li>
             <span class="text1">事件占比</span><span class="value">56.8%</span>
@@ -219,7 +219,7 @@ scoped lang ='scss'>
         justify-content: center;
         align-content: center;
         gap: vh(7);
-        background: url("/assets/2d/img/smartEducationOuter/组1649@2x.png");
+        background: url("/assets/2d/img/smartEducationOuter/4.png");
         background-size: 100% 100%;
         .value {
           width: 100%;
@@ -254,7 +254,7 @@ scoped lang ='scss'>
           width: vw(4);
           height: vh(6);
           margin-right: vw(10);
-          background: url("/assets/2d/img/smartEducationOuter/多边形 5@2x.png");
+          background: url("/assets/2d/img/smartEducationOuter/5.png");
           background-size: 100% 100%;
         }
         p::after {
@@ -263,7 +263,7 @@ scoped lang ='scss'>
           width: vw(6);
           height: vh(18);
           margin-left: vw(10);
-          background: url("/assets/2d/img/smartEducationOuter/组 1649@2x(1).png");
+          background: url("/assets/2d/img/smartEducationOuter/6.png");
           background-size: 100% 100%;
         }
 

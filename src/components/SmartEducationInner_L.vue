@@ -6,19 +6,19 @@ const resourceUseageData = [
     name: "音频文件",
     today: "1.235",
     total: "1.235",
-    url: "/assets/2d/img/smartEducationInner/音频文件@2x.png",
+    url: "./assets/2d/img/smartEducationInner/1.png",
   },
   {
     name: "文档文件",
     today: "1.235",
     total: "1.235",
-    url: "/assets/2d/img/smartEducationInner/文档文件@2x.png",
+    url: "./assets/2d/img/smartEducationInner/2.png",
   },
   {
     name: "教学活动",
     today: "1.235",
     total: "1.235",
-    url: "/assets/2d/img/smartEducationInner/教学活动@2x.png",
+    url: "./assets/2d/img/smartEducationInner/3.png",
   },
 ];
 
@@ -106,7 +106,7 @@ const classSituationData = [
               <p class="leftP">{{ item.L.name }}</p>
               <div
                 style="
-                  background: url('/assets/2d/img/smartEducationInner/矩形拷贝L@2x.png')
+                  background: url('./assets/2d/img/smartEducationInner/4.png')
                     center/cover;
                 "
               >
@@ -118,7 +118,7 @@ const classSituationData = [
               <p class="rightP">{{ item.R.name }}</p>
               <div
                 style="
-                  background: url('/assets/2d/img/smartEducationInner/矩形拷贝R@2x.png');
+                  background: url('./assets/2d/img/smartEducationInner/5.png');
                   background-size: '100% 100%';
                 "
               >
