@@ -2,6 +2,7 @@ import { STATE } from './STATE.js'
 import { CACHE } from './CACHE.js'
 import router from '@/router/index'
 import Shader from './shader'
+import { BufferGeometryUtils } from '../assets/BufferGeometryUtils'
 
 /**
  * 相机动画（传指定state）
@@ -82,38 +83,60 @@ function loadGUI() {
   scenesFolder.add(CACHE.container.renderer, 'toneMappingExposure', 0, 10).step(0.001).name('exposure')
   scenesFolder.add(CACHE.container.ambientLight, 'intensity').step(0.1).min(0).max(10).name('环境光强度')
   scenesFolder.add(CACHE.container.gammaPass, 'enabled').name('gamma校正')
+
+  const tubeColor = {
+    color1: `#${STATE.sceneList.tube.children[0].material.color.getHexString()}`,
+    color2: `#${STATE.sceneList.tube.children[16].material.color.getHexString()}`
+  }
   scenesFolder
-    .addColor(CACHE.container.attrs.lights.directionLights[0], 'color')
+    .addColor(tubeColor, 'color1')
     .onChange((val) => {
-      CACHE.container.directionLights[0].color.set(val)
+      for (let i = 0; i < 3; i++) {
+        STATE.sceneList.tube.children[i].material.color.set(val)
+      }
     })
-    .name('平行光颜色')
-  scenesFolder.add(CACHE.container.directionLights[0].position, 'x')
-  scenesFolder.add(CACHE.container.directionLights[0].position, 'y')
-  scenesFolder.add(CACHE.container.directionLights[0].position, 'z')
-  scenesFolder.add(deafultsScene, 'distance').onChange((val) => {
-    CACHE.container.directionLights[0].shadow.camera.left = -val
-    CACHE.container.directionLights[0].shadow.camera.right = val
-    CACHE.container.directionLights[0].shadow.camera.top = val
-    CACHE.container.directionLights[0].shadow.camera.bottom = -val
-    CACHE.container.directionLights[0].shadow.camera.updateProjectionMatrix()
-    CACHE.container.directionLights[0].shadow.needsUpdate = true
-  })
-  scenesFolder.add(CACHE.container.directionLights[0].shadow.camera, 'far').onChange(() => {
-    CACHE.container.directionLights[0].shadow.camera.updateProjectionMatrix()
-    CACHE.container.directionLights[0].shadow.needsUpdate = true
-  })
-  scenesFolder.add(CACHE.container.directionLights[0].shadow.camera, 'near').onChange(() => {
-    CACHE.container.directionLights[0].shadow.camera.updateProjectionMatrix()
-    CACHE.container.directionLights[0].shadow.needsUpdate = true
-  })
+    .name('管线颜色')
+
   scenesFolder
-    .add(CACHE.container.directionLights[0].shadow, 'bias')
-    .step(0.0001)
-    .onChange(() => {
-      CACHE.container.directionLights[0].shadow.needsUpdate = true
+    .addColor(tubeColor, 'color2')
+    .onChange((val) => {
+      for (let i = 3; i < 34; i++) {
+        STATE.sceneList.tube.children[i].material.color.set(val)
+      }
     })
-  scenesFolder.add(CACHE.container.directionLights[0], 'intensity').step(0.1).min(0).max(10)
+    .name('管线颜色')
+  // scenesFolder
+  //   .addColor(CACHE.container.attrs.lights.directionLights[0], 'color')
+  //   .onChange((val) => {
+  //     CACHE.container.directionLights[0].color.set(val)
+  //   })
+  //   .name('平行光颜色')
+  // scenesFolder.add(CACHE.container.directionLights[0].position, 'x')
+  // scenesFolder.add(CACHE.container.directionLights[0].position, 'y')
+  // scenesFolder.add(CACHE.container.directionLights[0].position, 'z')
+  // scenesFolder.add(deafultsScene, 'distance').onChange((val) => {
+  //   CACHE.container.directionLights[0].shadow.camera.left = -val
+  //   CACHE.container.directionLights[0].shadow.camera.right = val
+  //   CACHE.container.directionLights[0].shadow.camera.top = val
+  //   CACHE.container.directionLights[0].shadow.camera.bottom = -val
+  //   CACHE.container.directionLights[0].shadow.camera.updateProjectionMatrix()
+  //   CACHE.container.directionLights[0].shadow.needsUpdate = true
+  // })
+  // scenesFolder.add(CACHE.container.directionLights[0].shadow.camera, 'far').onChange(() => {
+  //   CACHE.container.directionLights[0].shadow.camera.updateProjectionMatrix()
+  //   CACHE.container.directionLights[0].shadow.needsUpdate = true
+  // })
+  // scenesFolder.add(CACHE.container.directionLights[0].shadow.camera, 'near').onChange(() => {
+  //   CACHE.container.directionLights[0].shadow.camera.updateProjectionMatrix()
+  //   CACHE.container.directionLights[0].shadow.needsUpdate = true
+  // })
+  // scenesFolder
+  //   .add(CACHE.container.directionLights[0].shadow, 'bias')
+  //   .step(0.0001)
+  //   .onChange(() => {
+  //     CACHE.container.directionLights[0].shadow.needsUpdate = true
+  //   })
+  // scenesFolder.add(CACHE.container.directionLights[0], 'intensity').step(0.1).min(0).max(10)
 
   // filter pass
   const filterFolder = gui.addFolder('滤镜')
@@ -235,12 +258,17 @@ function initMainBuilding(backFloor = '') {
           const floor = STATE.floorList.find(e => e.floor === backFloor)
           if (floor && !floor.model.includes(child.name)) {
             child.material.opacity = 0
+            child.material.transparent = true
           }
+
           new Bol3D.TWEEN.Tween(child.material)
             .to({
               opacity: 1
             }, 500)
             .start()
+            .onComplete(() => {
+              child.material.transparent = false
+            })
         }
       })
       // outscene1.traverse(child => {
@@ -270,7 +298,6 @@ function initMainBuilding(backFloor = '') {
     position: { x: -55.08483765224679, y: 32.670608008474204, z: -3.13171 },
     target: { x: -55.265641587822714, y: 20, z: -39.6371590 }
   }
-  CACHE.container.outlineObjects = []
   cameraAnimation({ cameraState, callback })
 }
 
@@ -388,7 +415,7 @@ function backToOut() {
   STATE.outLineObjects = []
   STATE.sceneList.mainBuilding.traverse(child => {
     if (child.isMesh) {
-      STATE.outLineObjects.push(child)
+      // STATE.outLineObjects.push(child)
       if (STATE.floorList[1].model.includes(child.name)) {
         new Bol3D.TWEEN.Tween(child.position)
           .to({
@@ -417,7 +444,7 @@ function backToOut() {
     }
   })
 
-  CACHE.container.outlineObjects = STATE.outLineObjects
+  // CACHE.container.outlineObjects = STATE.outLineObjects
   const cameraState = STATE.initialState
   cameraAnimation({ cameraState })
 }
@@ -441,7 +468,7 @@ function createFlyLines({ path = [], imgUrl = '', flowDirection = 'x', cut = 200
 
   const curve = new Bol3D.CatmullRomCurve3(curveArr, false, 'catmullrom', 0.0)
   curve.arcLengthDivisions = 3
-  
+
 
   const tubeGeometry = new Bol3D.TubeGeometry(curve, 64, radius);
   textureTest.wrapS = Bol3D.RepeatWrapping;
@@ -452,7 +479,7 @@ function createFlyLines({ path = [], imgUrl = '', flowDirection = 'x', cut = 200
     transparent: true,
     side: 2
   });
-  
+
   tubeMaterial.map.repeat[flowDirection] = repeat
 
   const tube = new Bol3D.Mesh(tubeGeometry, tubeMaterial);
@@ -508,10 +535,11 @@ const render = () => {
   const singleFrameTime = STATE.clock.getDelta()
   const elapsedTime = STATE.clock.getElapsedTime()
 
-  
+
   shader.peilou.shaderAnimate(singleFrameTime)
   shader.school.shaderAnimate(elapsedTime)
   flyLines.animation()
+  tubes.animation()
 
   requestAnimationFrame(render);
 };
@@ -536,14 +564,17 @@ function dbRightClick() {
         }
         count++
         if (count === 2) {
+
           //逻辑代码 
           if (STATE.currentScene === 'mainBuilding') {
             STATE.currentScene = 'out'
             backToOut()
+
           } else if (['1f', '2f', '3f', '4f', 'roof'].includes(STATE.currentScene)) {
             removeAllPopup()
             initMainBuilding(STATE.currentScene)
             STATE.currentScene = 'mainBuilding'
+
           } else if (['309', '310', '311', '312', '316', '317', '318', '319'].includes(STATE.currentScene)) {
             STATE.currentScene = '3f'
             initInnerFloor('3f', 0)
@@ -560,7 +591,7 @@ function dbRightClick() {
 }
 
 /**
- * 获取世界坐标的状态并赋值
+ * 获取世界坐标的状态
  * @param {object} obj 模型
  */
 function getWorldState(obj) {
@@ -639,6 +670,156 @@ const classRoom = {
   }
 }
 
+/**
+  * 管线系统
+  */
+const tubes = {
+  flowTube: null,
+
+  showTube(isTubeShow) {
+    // 1 是要隐藏的  2是要显示的  
+    const opacityAnimationArr = [
+      { name: 'floor', type: 1 },
+      { name: 'road', type: 1 },
+      { name: 'school', type: 1 },
+      { name: 'peilouLine', type: 1 },
+      { name: 'peilou', type: 1 },
+      { name: 'mainBuilding', type: 1 },
+      { name: 'carLine', type: 1 },
+      { name: 'schoolEdge', type: 2 },
+      { name: 'mainBuildingEdge', type: 2 },
+      { name: 'tube', type: 2 }
+    ]
+
+    if (isTubeShow) {
+      STATE.currentScene = 'tube'
+      cameraAnimation({
+        cameraState: STATE.showTubeState, callback: (() => {
+          CACHE.container.orbitControls.maxPolarAngle = Math.PI
+          CACHE.container.orbitControls.minPolarAngle = 0
+        })
+      })
+
+      STATE.sceneList.schoolEdge.visible = true
+      STATE.sceneList.mainBuildingEdge.visible = true
+      STATE.sceneList.tube.visible = true
+
+      for (let i = 0; i < opacityAnimationArr.length; i++) {
+        STATE.sceneList[opacityAnimationArr[i].name].traverse(e => {
+          if (e.isMesh) {
+            e.material.transparent = true
+            e.material.opacity = opacityAnimationArr[i].type === 1 ? 1 : 0
+            new Bol3D.TWEEN.Tween(e.material)
+              .to({
+                opacity: opacityAnimationArr[i].type === 1 ? 0 : 1
+              }, 500)
+              .start()
+          }
+        })
+      }
+    } else {
+
+
+      cameraAnimation({
+        cameraState: STATE.initialState, callback: (() => {
+          CACHE.container.orbitControls.maxPolarAngle = 1.4
+          CACHE.container.orbitControls.minPolarAngle = 0.3
+        })
+      })
+
+
+      for (let i = 0; i < opacityAnimationArr.length; i++) {
+        STATE.sceneList[opacityAnimationArr[i].name].traverse(e => {
+          if (e.isMesh) {
+            e.material.transparent = true
+            e.material.opacity = opacityAnimationArr[i].type === 1 ? 0 : 1
+            new Bol3D.TWEEN.Tween(e.material)
+              .to({
+                opacity: opacityAnimationArr[i].type === 1 ? 1 : 0
+              }, 500)
+              .start()
+              .onComplete(() => {
+                if (opacityAnimationArr[i].name === 'tube') {
+                  STATE.sceneList.schoolEdge.visible = false
+                  STATE.sceneList.mainBuildingEdge.visible = false
+                  STATE.sceneList.tube.visible = false
+                  STATE.currentScene = 'out'
+                }
+                e.material.transparent = false
+              })
+          }
+        })
+      }
+    }
+  },
+
+  /**
+   * 管道流动
+   */
+  animation() {
+    if (!this.flowTube) {
+      this.flowTube = STATE.sceneList.tube.children.find(e => e.name === 'Wcj-gd-04')
+      const textureTest = new Bol3D.TextureLoader().load('./assets/3d/img/tube.png'); // 流动材质
+      textureTest.wrapS = Bol3D.RepeatWrapping;
+      textureTest.wrapT = Bol3D.RepeatWrapping;
+      this.flowTube.material.map = textureTest
+      this.flowTube.material.alphaToCoverage = true
+      this.flowTube.material.transparent = true
+      this.flowTube.material.side = 2
+
+    } else if (STATE.currentScene === 'tube') {
+      this.flowTube.material.map.offset.x -= 0.01
+    }
+  }
+}
+
+
+/**
+ * 边框
+ */
+function edge(model, color = 0x113a5f) {
+  const group = new Bol3D.Group()
+  const edgeMatieral = new Bol3D.LineBasicMaterial({ color })
+  model.traverse(child => {
+    if (child.isMesh) {
+      const { position, scale, quaternion } = getWorldState(child)
+      const edges = new Bol3D.EdgesGeometry(child.geometry.clone())
+      const line = new Bol3D.LineSegments(edges, edgeMatieral)
+      line.position.set(position.x, position.y, position.z)
+      line.scale.set(scale.x, scale.y, scale.z)
+      line.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
+
+      line.material.transparent = true
+      line.material.opacity = 0.5
+      group.add(line)
+
+    }
+  })
+  return group
+}
+
+/**
+ * 静态合批(网格合并)
+ */
+function mergedMesh(models) {
+  const mergeMeshInfo = []
+  let mergeMeshMaterialInfo = null
+  models.children.forEach(model => {
+    model.updateWorldMatrix(true, false)
+    const matrixWorldGeometry = model.geometry.clone().applyMatrix4(model.matrixWorld)
+    mergeMeshInfo.push(matrixWorldGeometry)
+    if (!mergeMeshMaterialInfo) {
+      mergeMeshMaterialInfo = model.material.clone()
+    }
+  })
+
+
+  const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(mergeMeshInfo)
+  const merged = new Bol3D.Mesh(mergedGeometry, mergeMeshMaterialInfo)
+
+  return merged
+}
+
 export const API = {
   loadGUI,
   initFloor,
@@ -646,6 +827,8 @@ export const API = {
   initInnerFloor,
   dbRightClick,
   getWorldState,
+  edge,
+  tubes,
   shader,
   classRoom,
   flyLines,

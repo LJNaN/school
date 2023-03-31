@@ -30,9 +30,9 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         autoRotateSpeed: 1,
         target: [STATE.initialState.target.x, STATE.initialState.target.y, STATE.initialState.target.z],
         // minDistance: 0,
-        // maxDistance: 2500,
-        maxPolarAngle: Math.PI,
-        minPolarAngle: -Math.PI,
+        maxDistance: 1000,
+        maxPolarAngle: 90 * Math.PI / 180,
+        minPolarAngle: 0  * Math.PI / 180,
         enableDamping: true,
         dampingFactor: 0.5,
       }
@@ -132,10 +132,10 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
 
             // STATE.sceneList.tree.add(child.clone())
-            
+
             // 线框
-            const edges = new Bol3D.EdgesGeometry( child.geometry.clone() );
-            const line = new Bol3D.LineSegments( edges, new Bol3D.LineBasicMaterial( { color: 0xff8502 } ) );
+            const edges = new Bol3D.EdgesGeometry(child.geometry.clone());
+            const line = new Bol3D.LineSegments(edges, new Bol3D.LineBasicMaterial({ color: 0xff8502 }));
             line.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
             line.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
             line.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
@@ -143,6 +143,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             line.material.opacity = 0.05
             STATE.sceneList.tree.add(line)
             STATE.bloomList.push(line)
+
 
             child.visible = false
           }
@@ -174,7 +175,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.material.transparent = true
               child.visible = false
 
-              
+
             }
           }
         })
@@ -192,12 +193,12 @@ export const sceneOnLoad = ({ domElement, callback }) => {
                 child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
                 child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
                 child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-                
+
                 const meshClone = child.clone()
-                if(meshClone.name.includes('boli')) {
+                if (meshClone.name.includes('boli')) {
                   meshClone.material.color = new Bol3D.Color(0.2, 0.2, 0.2)
                   STATE.bloomList.push(meshClone)
-                  
+
                 }
 
                 STATE.sceneList.mainBuilding.add(meshClone)
@@ -209,7 +210,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         })
 
         STATE.sceneList.mainBuilding.children.forEach(e => {
-          STATE.outLineObjects.push(e)
+          // STATE.outLineObjects.push(e)
           STATE.outClickObjects.push(e)
         })
         container.attach(STATE.sceneList.mainBuilding)
@@ -238,10 +239,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               STATE.bloomList.push(meshClone)
               STATE.sceneList.school.add(meshClone)
               child.visible = false
-              
 
-              // 学校主体
-            } else {
+            } else { // 学校主体
               const worldState = API.getWorldState(child)
               child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
@@ -259,17 +258,29 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               childClone.material.transparent = false
               STATE.sceneList.school.add(childClone)
               child.visible = false
-              
             }
           }
         })
         container.attach(STATE.sceneList.school)
       } else if (model.name === 'xxgd') { // 管道
+        const tube = new Bol3D.Group()
         model.traverse(child => {
           if (child.isMesh) {
+            const childClone = child.clone()
+            childClone.position.y = -20
+            if (['Wcj-gd-00', 'Wcj-gd-01', 'Wcj-gd-04'].includes(child.name)) {
+              childClone.material.color.set(0x231207)
+            } else {
+              childClone.material.color.set(0x141414)
+            }
+            STATE.bloomList.push(childClone)
+            tube.add(childClone)
             child.visible = false
           }
         })
+        STATE.sceneList.tube = tube
+        tube.renderOrder = -1
+        tube.name = 'tube'
       } else if (model.name === 'xxxt') { // 院墙
         model.traverse(child => {
           if (child.isMesh) {
@@ -279,8 +290,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
             child.scale.y = child.scale.y * 8
             STATE.sceneList.school.add(child)
+            child.name = 'weiqiang'
             API.shader.school.initShader(child)
-            
 
           }
         })
@@ -292,6 +303,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       container.attach(STATE.sceneList.road)
       container.attach(STATE.sceneList.peilou)
       container.attach(STATE.sceneList.peilouLine)
+      container.attach(STATE.sceneList.tube)
 
       evt.sceneList = STATE.sceneList
       CACHE.container = evt
@@ -301,15 +313,36 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       CACHE.container.loadingBar.style.visibility = 'hidden'
 
 
+      // 学校主体边框 + 辉光
+      const schoolEdge = API.edge(STATE.sceneList.school)
+      schoolEdge.visible = false
+      CACHE.container.attach(schoolEdge)
+      STATE.sceneList.schoolEdge = schoolEdge
+      schoolEdge.children.forEach(e => {
+        STATE.bloomList.push(e)
+      })
+      
+      // 主楼主体边框 + 辉光
+      const mainBuildingEdge = API.edge(STATE.sceneList.mainBuilding)
+      mainBuildingEdge.visible = false
+      CACHE.container.attach(mainBuildingEdge)
+      STATE.sceneList.mainBuildingEdge = mainBuildingEdge
+      mainBuildingEdge.children.forEach(e => {
+        if(e.name != 'weiqiang')
+        STATE.bloomList.push(e)
+      })
+
+
       // API.loadGUI()
       // API.initFloor()
 
       API.shader.peilou.initShader()
       API.flyLines.initFlyLines()
+      // API.tubes.showTube(true)
 
 
-      
-      
+
+
       STATE.bloomList.forEach(e => {
         CACHE.container.addBloom(e)
       })
@@ -324,8 +357,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
   events.ondbclick = (e) => {
 
     if (e.objects.length) {
-      
-      console.log('e.objects[0]: ', e.objects[0]);
+
+
       const firstObject = e.objects[0].object
 
       // 在外场景点到主楼

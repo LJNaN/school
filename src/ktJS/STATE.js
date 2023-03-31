@@ -5,13 +5,18 @@ import { CACHE } from './CACHE.js'
 const PUBLIC_PATH = './assets/3d'
 const initialState = {
   position: {
-    // x: 105.41616099631243, y: 74.01781066807432, z: 74.1189
-    x: 935.1784917846949, y: 291.0193266441977, z: -4.4444442388618945
+    x: 197.02449313696982, y: 122.13810006283873, z: 126.939
+    // x: 935.1784917846949, y: 291.0193266441977, z: -4.4444442388618945
   },
   target: {
-    // x: 34.56716070238548, y: 20, z: 3.854471
-    x: 186.50902342021402, y: 20, z: -35.95007810675151
+    x: 60.64430796456643, y: 20, z: 4.2167
+    // x: 186.50902342021402, y: 20, z: -35.95007810675151
   }
+}
+
+const showTubeState = {
+  position: { x: 82.99589382331085, y: -7.282949417734496, z: 47.69 },
+  target: { x: 6.734846680912499, y: -20, z: -3.2761796 }
 }
 
 // 内外的发光、可点击对象
@@ -29,6 +34,7 @@ clock.running = true
   mainBuilding  主楼
   1f 2f 3f 4f roof  楼层
   309 310 311 ...  教室
+  tube 管道
 */
 const currentScene = "out"
 
@@ -71,7 +77,10 @@ const sceneList = {
   floor: null, // 纯色地板
   road: null, // 路
   flyLine: null, // 竖直飞线
-  carLine: null // 车流飞线
+  carLine: null, // 车流飞线
+  schoolEdge: null, //学校边框
+  mainBuildingEdge: null, //主楼边框
+  tube: null // 管道
 }
 
 // 教室信息
@@ -332,5 +341,6 @@ export const STATE = {
   classRoomInfo,  // 教室的信息
   flyLineConfig, // 场景流线
   bloomList, // 辉光数组
+  showTubeState, // 显示管道的相机设置
   temp
 }
