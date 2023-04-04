@@ -3,23 +3,15 @@
   <div class="iconTitle">
     <ul>
       <li v-for="(icon, index) in iconTitle" :key="index">
-        <div
-          class="icon"
-          :style="{
-            background: `url(${icon.url})`,
-            backgroundSize: '100% 100%',
-          }"
-        ></div>
+        <div class="icon" :style="{
+          background: `url(${icon.url})`,
+          backgroundSize: '100% 100%',
+        }"></div>
         <span>{{ icon.name }}</span>
       </li>
     </ul>
-    <el-button
-      type="primary"
-      class="tube"
-      @click="tubeClick"
-      :disabled="tubeDisabled"
-      v-show="router.currentRoute.value.path === '/'"
-    >{{ showTube ? '返回全貌' : '管线系统' }}</el-button>
+    <el-button type="primary" class="tube" @click="tubeClick" :disabled="tubeDisabled"
+      v-show="router.currentRoute.value.path === '/SmartSchool'">{{ showTube ? '返回全貌' : '管线系统' }}</el-button>
   </div>
 </template>
 
@@ -57,6 +49,7 @@ const iconTitle = [
   position: absolute;
   top: vh(100);
   right: vw(424);
+
   .tube {
     cursor: pointer;
     position: absolute;
@@ -73,10 +66,12 @@ const iconTitle = [
     height: vh(30);
     display: flex;
     margin-bottom: vh(10);
+
     .icon {
       width: vw(30);
       height: vh(30);
     }
+
     span {
       display: flex;
       align-items: center;

@@ -1,27 +1,28 @@
 <script setup>
 import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
+import Video from "./Video.vue";
 //实时监控数据
 const monitorData = [
   {
     id: "01",
     name: "北门安保室",
-    url: "./assets/2d/img/smartSchool/2.png",
+    url: "./assets/2d/video/monitor1.mp4",
   },
   {
     id: "02",
     name: "南门安保室",
-    url: "./assets/2d/img/smartSchool/2.png",
+    url: "./assets/2d/video/monitor2.mp4",
   },
   {
     id: "03",
     name: "北门安保室",
-    url: "./assets/2d/img/smartSchool/2.png",
+    url: "./assets/2d/video/monitor3.mp4",
   },
   {
     id: "04",
     name: "图书馆2楼自习室",
-    url: "./assets/2d/img/smartSchool/2.png",
+    url: "./assets/2d/video/monitor4.mp4",
   },
 ];
 //监控报警数据
@@ -48,13 +49,7 @@ const monitorAlertData = [
     <Container title="实时监控">
       <ul class="monitor">
         <li v-for="(item, index) in monitorData" :key="index">
-          <div
-            class="monitorVideo"
-            :style="{
-              background: `url(${item.url})`,
-              backgroundSize: '100% 100%',
-            }"
-          ></div>
+          <Video class="monitorVideo" :url="item.url"></Video>
           <div class="monitorName">
             <span>{{ item.id }}</span>
             <span>{{ item.name }}</span>
@@ -97,6 +92,7 @@ const monitorAlertData = [
   position: absolute;
   right: vw(10);
   top: vh(56);
+
   .buildUsage {
     margin: vh(25) 0 vh(51) 0;
     display: flex;
@@ -106,6 +102,7 @@ const monitorAlertData = [
       width: vw(159);
       height: vh(159);
     }
+
     .leftText {
       width: vw(242);
       height: vh(159);
@@ -114,19 +111,23 @@ const monitorAlertData = [
       flex-wrap: wrap;
       gap: vh(10);
       padding: vh(25) vw(11) 0 0;
+
       p {
         width: 100%;
         display: flex;
         justify-content: space-between;
+
         :first-child {
           text-align: end;
         }
+
         span {
           width: 46%;
         }
       }
     }
   }
+
   .monitor {
     display: flex;
     flex-wrap: wrap;
@@ -134,16 +135,19 @@ const monitorAlertData = [
     align-items: center;
     margin: vh(25) 0 vh(67) vw(5);
     gap: vw(9);
+
     li {
       width: vw(170);
       height: vh(118);
       border: 1px solid #2190ca;
       border-radius: 5px;
       overflow: hidden;
+
       .monitorVideo {
         width: 100%;
-        height: vh(97);
+        height: vh(90);
       }
+
       .monitorName {
         display: flex;
         width: 100%;
@@ -153,12 +157,14 @@ const monitorAlertData = [
         align-items: center;
         background: url("/assets/2d/img/smartSchool/4.png");
         background-size: 100% 100%;
+
         :first-child {
           width: 10%;
           margin-left: vw(5);
           font-size: rem(12);
           scale: 0.8;
         }
+
         :last-child {
           width: 90%;
           text-align: center;
@@ -168,31 +174,39 @@ const monitorAlertData = [
       }
     }
   }
+
   .monitorAlert {
     padding-left: vw(14);
     padding-right: vw(14);
+
     .title {
       display: flex;
       justify-content: center;
       align-items: center;
+
       img {
         width: vw(92);
         height: vh(100);
       }
+
       .eventTotal {
         flex: 1;
+
         p {
           font-size: rem(12);
         }
+
         .num {
           font-size: rem(26);
           font-family: YouSheBiaoTiHei;
         }
       }
+
       .deviceBtn {
         display: flex;
         align-items: center;
         flex: 2;
+
         div {
           flex: 1;
           width: vw(49);
@@ -201,10 +215,12 @@ const monitorAlertData = [
           font-size: rem(12);
           text-align: center;
         }
+
         .Btn {
           background: url("/assets/2d/img/smartSchool/6.png");
           background-size: 100% 100%;
         }
+
         .chooseBtn {
           background: url("/assets/2d/img/smartSchool/7.png");
 
@@ -212,8 +228,10 @@ const monitorAlertData = [
         }
       }
     }
+
     ul {
       font-size: rem(12.78);
+
       li {
         width: vw(342);
         height: vh(32.8);
@@ -221,6 +239,7 @@ const monitorAlertData = [
         justify-content: space-around;
         align-items: center;
         background: url("/assets/2d/img/smartSchool/8.png");
+
         .index {
           width: vw(12);
           height: vh(15);
@@ -229,9 +248,11 @@ const monitorAlertData = [
           border-radius: 2px;
           text-align: center;
         }
+
         .event {
           color: #ffe849;
         }
+
         .Btn {
           width: 34px;
           height: 19px;
@@ -243,6 +264,7 @@ const monitorAlertData = [
           border-radius: 5px;
         }
       }
+
       :nth-child(3) {
         .index {
           color: #1fadff;

@@ -9,7 +9,7 @@
 import Scene from "@/views/Scene.vue";
 import router from "@/router/index";
 import Home from "@/views/Home.vue";
-router.push("/");
+router.push("/SmartSchool");
 </script>
 
 
@@ -27,7 +27,7 @@ router.push("/");
   height: 100vh;
   width: 100vw;
   z-index: 2;
-  /* background: url("/assets/2d/img/1.png"); */
+  background: url("/assets/2d/img/1.png");
   background-size: 100% 100%;
 }
 </style>

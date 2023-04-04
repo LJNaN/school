@@ -16,13 +16,14 @@ const leftRef = ref(null);
 
 <template>
   <div class="home">
+
     <Head></Head>
     <Foot></Foot>
     <SmartSchool_L></SmartSchool_L>
     <SmartSchool_R></SmartSchool_R>
 
     <Icon_L></Icon_L>
-    <!-- <Icon_R></Icon_R> -->
+    <Icon_R></Icon_R>
     <!-- <Icon_R_Energy></Icon_R_Energy> -->
   </div>
 </template>

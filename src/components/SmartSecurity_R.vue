@@ -1,27 +1,29 @@
 <script setup>
 import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
+import Video from "./Video.vue";
+
 //实时监控数据
 const monitorData = [
   {
     id: "01",
     name: "北门安保室",
-    url: "./assets/2d/img/smartSecurity/2.png",
+    url: "./assets/2d/video/monitor1.mp4",
   },
   {
     id: "02",
     name: "南门安保室",
-    url: "./assets/2d/img/smartSecurity/2.png",
+    url: "./assets/2d/video/monitor2.mp4",
   },
   {
     id: "03",
     name: "北门安保室",
-    url: "./assets/2d/img/smartSecurity/2.png",
+    url: "./assets/2d/video/monitor3.mp4",
   },
   {
     id: "04",
     name: "图书馆2楼自习室",
-    url: "./assets/2d/img/smartSecurity/2.png",
+    url: "./assets/2d/video/monitor4.mp4",
   },
 ];
 //值班保卫信息数据
@@ -96,13 +98,7 @@ const parkData = {
     <Container title="实时监控">
       <ul class="monitor">
         <li v-for="(item, index) in monitorData" :key="index">
-          <div
-            class="monitorVideo"
-            :style="{
-              background: `url(${item.url})`,
-              backgroundSize: '100% 100%',
-            }"
-          ></div>
+          <Video class="monitorVideo" :url="item.url"></Video>
           <div class="monitorName">
             <span>{{ item.id }}</span>
             <span>{{ item.name }}</span>
@@ -118,15 +114,10 @@ const parkData = {
           <span class="telephone">电话</span>
           <span class="location">位置</span>
         </li>
-        <li
-          class="Information"
-          v-for="(item, index) in securityData"
-          :key="index"
-          :style="{
-            background: 'url(./assets/2d/img/smartSecurity/3.png)',
-            backgroundSize: '100% 100%',
-          }"
-        >
+        <li class="Information" v-for="(item, index) in securityData" :key="index" :style="{
+          background: 'url(./assets/2d/img/smartSecurity/3.png)',
+          backgroundSize: '100% 100%',
+        }">
           <span class="id">{{ item.id }}</span>
           <span class="name">{{ item.name }}</span>
           <span class="telephone">{{ item.telephone }}</span>
@@ -145,46 +136,51 @@ const parkData = {
   position: absolute;
   right: vw(10);
   top: vh(56);
+
   .parkSecurity {
     height: 250px;
+
     .parkInformation {
       margin: vh(29) 0 vh(20) 0;
       display: flex;
       justify-content: space-around;
+
       li {
         .value {
           font-size: rem(18);
         }
+
         div {
           width: 53px;
           height: 2px;
-          background: linear-gradient(
-            90deg,
-            #3baaff 0%,
-            rgba(59, 170, 255, 0) 100%
-          );
+          background: linear-gradient(90deg,
+              #3baaff 0%,
+              rgba(59, 170, 255, 0) 100%);
         }
+
         .name {
           font-size: rem(12);
           scale: 0.83;
         }
       }
+
       :last-child {
         div {
           width: 53px;
           height: 2px;
-          background: linear-gradient(
-            90deg,
-            #26ff63 0%,
-            rgba(38, 255, 99, 0) 100%
-          );
+          background: linear-gradient(90deg,
+              #26ff63 0%,
+              rgba(38, 255, 99, 0) 100%);
         }
       }
     }
+
     .troubleInformation {
       display: flex;
+
       .leftCircle {
         flex: 1;
+
         .normalTrouble {
           position: relative;
           width: vw(101);
@@ -192,6 +188,7 @@ const parkData = {
           background: rgba(59, 170, 255, 0.3);
           border: vw(1) solid #3baaff;
           border-radius: 50%;
+
           .circle {
             position: absolute;
             bottom: 0;
@@ -202,6 +199,7 @@ const parkData = {
             border: vw(1) solid #03e5fe;
             border-radius: 50%;
           }
+
           .text {
             position: absolute;
             height: 160px;
@@ -210,19 +208,23 @@ const parkData = {
             flex-direction: column;
             font-size: rem(12);
             scale: 0.83;
+
             :nth-child(1) {
               flex: 1;
               color: #3baaff;
             }
+
             :nth-child(2) {
               flex: 1;
               color: #03e5fe;
             }
+
             :nth-child(3) {
               flex: 1;
               color: #a1a1a1;
             }
           }
+
           .lefttext {
             position: absolute;
             height: vh(114);
@@ -234,17 +236,20 @@ const parkData = {
             flex-direction: column;
             justify-content: space-around;
             text-align: end;
+
             :nth-child(1) {
               flex: 1;
               color: #3baaff;
               border-bottom: 1px solid #ffffff;
             }
+
             :nth-child(2) {
               flex: 1;
               color: #03e5fe;
               vertical-align: bottom;
               border-bottom: 1px solid #ffffff;
             }
+
             :nth-child(3) {
               flex: 1;
               color: #a1a1a1;
@@ -254,8 +259,10 @@ const parkData = {
           }
         }
       }
+
       .rightCircle {
         flex: 1;
+
         .abnormalTrouble {
           position: relative;
           width: vw(101);
@@ -263,6 +270,7 @@ const parkData = {
           background: rgba(255, 42, 0, 0.3);
           border: vw(1) solid #ff2a00;
           border-radius: 50%;
+
           .circle {
             position: absolute;
             bottom: 0;
@@ -273,6 +281,7 @@ const parkData = {
             border: vw(1) solid #ffdf00;
             border-radius: 50%;
           }
+
           .text {
             position: absolute;
             height: 160px;
@@ -281,19 +290,23 @@ const parkData = {
             flex-direction: column;
             font-size: rem(12);
             scale: 0.83;
+
             :nth-child(1) {
               flex: 1;
               color: #ff2a00;
             }
+
             :nth-child(2) {
               flex: 1;
               color: #ffdf00;
             }
+
             :nth-child(3) {
               flex: 1;
               color: #a1a1a1;
             }
           }
+
           .lefttext {
             position: absolute;
             height: vh(114);
@@ -305,17 +318,20 @@ const parkData = {
             flex-direction: column;
             justify-content: space-around;
             text-align: end;
+
             :nth-child(1) {
               flex: 1;
               color: #ff2a00;
               border-bottom: 1px solid #ffffff;
             }
+
             :nth-child(2) {
               flex: 1;
               color: #ffdf00;
               vertical-align: bottom;
               border-bottom: 1px solid #ffffff;
             }
+
             :nth-child(3) {
               flex: 1;
               color: #a1a1a1;
@@ -327,23 +343,27 @@ const parkData = {
       }
     }
   }
+
   .monitor {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin: vh(25) 0 vh(97) vw(5);
+    margin: vh(25) 0 vh(67) vw(5);
     gap: vw(9);
+
     li {
       width: vw(170);
       height: vh(118);
       border: 1px solid #2190ca;
       border-radius: 5px;
       overflow: hidden;
+
       .monitorVideo {
         width: 100%;
-        height: vh(97);
+        height: vh(90);
       }
+
       .monitorName {
         display: flex;
         width: 100%;
@@ -351,14 +371,16 @@ const parkData = {
 
         justify-content: center;
         align-items: center;
-        background: url("/assets/2d/img/smartSecurity/4.png");
+        background: url("/assets/2d/img/smartSchool/4.png");
         background-size: 100% 100%;
+
         :first-child {
           width: 10%;
           margin-left: vw(5);
           font-size: rem(12);
           scale: 0.8;
         }
+
         :last-child {
           width: 90%;
           text-align: center;
@@ -368,6 +390,7 @@ const parkData = {
       }
     }
   }
+
   .securityInformation {
     display: flex;
     flex-direction: column;
@@ -375,22 +398,27 @@ const parkData = {
     height: vh(270);
     font-size: rem(12);
     margin-right: vw(14);
+
     li {
       height: vh(28);
       line-height: vh(28);
       text-align: center;
       display: flex;
+
       .id {
         flex: 1;
       }
+
       .name {
         flex: 2;
       }
+
       .telephone {
         flex: 3;
         text-align: start;
         padding-left: vw(27);
       }
+
       .location {
         flex: 3;
         text-align: end;

@@ -5,7 +5,7 @@ import Home from "@/views/Home.vue"
 
 
 const routes = [
-  { path: "/", component: Home },
+  // { path: "/", component: Home },
   // { path: "/classroom", component: Classroom },
   { path: "/SmartSchool", component: () => import("../views/SmartSchool.vue") },
   { path: "/SmartEducationInner", component: () => import("../views/SmartEducationInner.vue") },

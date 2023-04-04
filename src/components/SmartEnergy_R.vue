@@ -331,9 +331,9 @@ onUnmounted(() => {
             <span>时间</span>
           </li>
           <li v-for="(item, index) in warningMessageData" :key="index">
-            <span
-              ><div>{{ index + 1 }}</div></span
-            >
+            <span>
+              <div>{{ index + 1 }}</div>
+            </span>
             <span>{{ item.id }}</span>
             <span>{{ item.class }}</span>
             <span>{{ item.warningMessage }}</span>
@@ -353,17 +353,22 @@ onUnmounted(() => {
   position: absolute;
   top: vh(56);
   right: vw(10);
+
   .energyConsume {
     margin: vh(20) 0 vh(58) 0;
+
     .energybody {
       display: flex;
       justify-content: space-around;
+
       .leftBlock {
         text-align: center;
+
         p {
           font-size: rem(14);
           margin-bottom: vh(3);
         }
+
         .yellow {
           width: vw(163);
           height: vh(54);
@@ -372,10 +377,12 @@ onUnmounted(() => {
           font-size: rem(27);
           line-height: 54px;
           color: #ffdf00ff;
+
           span {
             font-size: rem(14);
           }
         }
+
         .blue {
           width: vw(163);
           height: vh(54);
@@ -384,47 +391,57 @@ onUnmounted(() => {
           color: #3baaffff;
           background: url("/assets/2d/img/smartEnergy/6.png");
           background-size: 100% 100%;
+
           span {
             font-size: rem(14);
           }
         }
       }
+
       .energyConsumeEchart {
         width: vw(160);
         height: vh(160);
       }
     }
+
     .btn {
       display: flex;
       justify-content: space-around;
       text-align: center;
+
       .btnleft {
         width: vw(74);
         height: vh(17);
+        white-space: nowrap;
         background: url("/assets/2d/img/smartEnergy/btnleft@2x.png");
         background-size: 100% 100%;
+
         span {
           display: block;
           font-size: rem(12);
           scale: 0.87;
         }
       }
+
       .btncenter {
         width: vw(70);
         height: vw(17);
         background: url("/assets/2d/img/smartEnergy/btncenter@2x.png");
         background-size: 100% 100%;
+
         span {
           display: block;
           font-size: rem(12);
           scale: 0.87;
         }
       }
+
       .btnright {
         width: vw(74);
         height: vh(17);
         background: url("/assets/2d/img/smartEnergy/btnright@2x.png");
         background-size: 100% 100%;
+
         span {
           display: block;
           font-size: rem(12);
@@ -433,18 +450,22 @@ onUnmounted(() => {
       }
     }
   }
+
   .energyState {
     width: vw(358);
     height: vh(260);
   }
+
   .warningMessage {
     margin-top: vh(19);
+
     ul {
       display: flex;
       flex-wrap: wrap;
       margin: 0 auto;
       gap: vh(6);
       font-size: rem(12.78);
+
       li {
         width: 100%;
         height: vh(34);
@@ -453,14 +474,17 @@ onUnmounted(() => {
         display: flex;
         justify-content: space-around;
         align-items: center;
+
         span {
           width: 20%;
           text-align: center;
         }
+
         span:first-child {
           width: 10%;
           display: flex;
           justify-content: center;
+
           div {
             padding: 0.2rem 0.4rem;
             background: #2f3747;
@@ -469,6 +493,7 @@ onUnmounted(() => {
           }
         }
       }
+
       li:nth-child(5) {
         span :first-child {
           color: #1fadffff;
