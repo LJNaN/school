@@ -798,6 +798,26 @@ function edge(model, color = 0x113a5f) {
   return group
 }
 
+
+/**
+ * 加载icon
+ */
+function initIcon() {
+  const icon1 = new Bol3D.POI.Icon({
+    position: [0, 20, 0],
+    url: './assets/3d/img/2.png',
+    scale: [15 / 200, 15 / 200],
+    color: 0xff8300,
+    sizeAttenuation: false,
+    publicPath: '',
+    cb: () => {
+      // dosomething...
+    }
+  })
+  container.attach(icon1)
+  console.log('icon1: ', icon1);
+}
+
 /**
  * 静态合批(网格合并)
  */
@@ -828,6 +848,7 @@ export const API = {
   dbRightClick,
   getWorldState,
   edge,
+  initIcon,
   tubes,
   shader,
   classRoom,

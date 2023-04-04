@@ -333,6 +333,10 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       })
 
 
+      // icon
+      API.initIcon()
+
+
       // API.loadGUI()
       // API.initFloor()
 
