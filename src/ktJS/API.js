@@ -878,6 +878,7 @@ const icon = {
           sizeAttenuation: false
         })
         icon.name = item.name
+        
         // icon.renderOrder = -1
         icon.material.alphaToCoverage = true
         STATE.bloomList.push(icon)

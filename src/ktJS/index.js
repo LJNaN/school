@@ -295,7 +295,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
             STATE.sceneList.school.add(child)
             child.name = 'weiqiang'
             API.shader.school.initShader(child)
-
+            console.log('child: ', child);
           }
         })
       }
@@ -337,6 +337,15 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
       // icon
       API.icon.initIcon()
+      // 他妈的alphaToCoverage不知道为什么只有异步赋值
+      setTimeout(() => {
+        STATE.sceneList.icon.children.forEach(e => {
+          if (e.type == 'Icon') {
+            e.renderOrder = 1
+            e.material.alphaToCoverage = true
+          }
+        })
+      }, 1000);
 
 
       API.loadGUI()
