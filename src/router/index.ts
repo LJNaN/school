@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory } from "vue-router"
 import Home from "@/views/Home.vue"
 // import Classroom from "@/views/Classroom.vue"
-
+import LiTest from "@/components/LiTest.vue"
 
 
 const routes = [
+  { path: "/", component: LiTest },
   // { path: "/", component: Home },
   // { path: "/classroom", component: Classroom },
   { path: "/SmartSchool", component: () => import("../views/SmartSchool.vue") },

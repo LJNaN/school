@@ -27,11 +27,16 @@ const monitorData = [
 ];
 //监控报警数据
 const monitorAlertData = [
-  { name: "文科教学楼2202", event: "摄像头灭火报警" },
-  { name: "文科教学楼2201", event: "摄像头灭火报警" },
-  { name: "文科教学楼2302", event: "摄像头灭火报警" },
-  { name: "文科教学楼2401", event: "摄像头灭火报警" },
-  { name: "文科教学楼2101", event: "摄像头灭火报警" },
+  { id: 1, name: "文科教学楼2202", event: "摄像头灭火报警" },
+  { id: 2, name: "文科教学楼2201", event: "摄像头灭火报警" },
+  { id: 3, name: "文科教学楼2302", event: "摄像头灭火报警" },
+  { id: 4, name: "文科教学楼2401", event: "摄像头灭火报警" },
+  { id: 5, name: "文科教学楼2101", event: "摄像头灭火报警" },
+  { id: 1, name: "文科教学楼2202", event: "摄像头灭火报警" },
+  { id: 2, name: "文科教学楼2201", event: "摄像头灭火报警" },
+  { id: 3, name: "文科教学楼2302", event: "摄像头灭火报警" },
+  { id: 4, name: "文科教学楼2401", event: "摄像头灭火报警" },
+  { id: 5, name: "文科教学楼2101", event: "摄像头灭火报警" },
 ];
 </script>
 <template>
@@ -72,12 +77,16 @@ const monitorAlertData = [
           </div>
         </div>
         <ul>
-          <li v-for="(item, index) in monitorAlertData" :key="index">
-            <div class="index">{{ index + 1 }}</div>
-            <span>{{ item.name }}</span>
-            <span class="event">{{ item.event }}</span>
-            <button class="Btn"><span>查看</span></button>
-          </li>
+          <div class="Information-container">
+            <div class="scroll-list">
+              <li v-for="(item, index) in monitorAlertData" :key="index">
+                <div class="index">{{ item.id }}</div>
+                <span>{{ item.name }}</span>
+                <span class="event">{{ item.event }}</span>
+                <button class="Btn"><span>查看</span></button>
+              </li>
+            </div>
+          </div>
         </ul>
       </div>
     </Container>
@@ -234,7 +243,7 @@ const monitorAlertData = [
 
       li {
         width: vw(342);
-        height: vh(32.8);
+        height: vh(32);
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -265,7 +274,37 @@ const monitorAlertData = [
         }
       }
 
-      :nth-child(3) {
+
+
+      .Information-container {
+        position: relative;
+        height: vh(210);
+        overflow: hidden;
+
+        .scroll-list {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          gap: vh(10);
+          animation: scroll 6s linear infinite normal;
+
+        }
+
+
+        @keyframes scroll {
+          100% {
+            top: vh(-210)
+          }
+        }
+      }
+
+
+      :nth-child(3),
+      :nth-child(8) {
         .index {
           color: #1fadff;
         }

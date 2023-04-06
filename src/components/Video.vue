@@ -1,8 +1,6 @@
 <script setup>
 import { reactive, ref, computed, toRefs, onBeforeMount, onMounted, onUnmounted, watch } from 'vue'
 const videoUrl = defineProps({ url: String })
-
-console.log(videoUrl.url)
 </script>
 <template>
     <video class="video" :src="videoUrl.url" muted autoplay>

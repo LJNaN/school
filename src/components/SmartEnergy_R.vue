@@ -9,15 +9,60 @@ import {
 } from "vue";
 import Container from "./Container.vue";
 import * as echarts from "echarts";
-const warningMessageData = [];
-for (let i = 0; i < 7; i++) {
-  warningMessageData.push({
-    id: "渝高1554",
-    class: "清洁车",
-    warningMessage: "XX告警",
-    time: "2023/01/16",
-  });
-}
+const warningMessageData = [
+  {
+    index: 1, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 2, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 3, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 4, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 5, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 6, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 7, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 8, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 1, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 2, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+
+  {
+    index: 3, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 4, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 5, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 6, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 7, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 8, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+  {
+    index: 1, id: "渝高1554", class: "清洁车", warningMessage: "XX告警", time: "2023/01/16",
+  },
+];
 
 //能源消耗
 const energyConsumeData = ref(null);
@@ -330,15 +375,20 @@ onUnmounted(() => {
             <span>告警信息</span>
             <span>时间</span>
           </li>
-          <li v-for="(item, index) in warningMessageData" :key="index">
-            <span>
-              <div>{{ index + 1 }}</div>
-            </span>
-            <span>{{ item.id }}</span>
-            <span>{{ item.class }}</span>
-            <span>{{ item.warningMessage }}</span>
-            <span>{{ item.time }}</span>
-          </li>
+          <div class="Information-container ">
+            <div class="scroll-list">
+              <li v-for="(item, index) in warningMessageData" :key="index">
+                <span>
+                  <div>{{ item.index }}</div>
+                </span>
+                <span>{{ item.id }}</span>
+                <span>{{ item.class }}</span>
+                <span>{{ item.warningMessage }}</span>
+                <span>{{ item.time }}</span>
+              </li>
+            </div>
+          </div>
+
         </ul>
       </div>
     </Container>
@@ -460,7 +510,6 @@ onUnmounted(() => {
     margin-top: vh(19);
 
     ul {
-      display: flex;
       flex-wrap: wrap;
       margin: 0 auto;
       gap: vh(6);
@@ -497,6 +546,32 @@ onUnmounted(() => {
       li:nth-child(5) {
         span :first-child {
           color: #1fadffff;
+        }
+      }
+    }
+
+
+    .Information-container {
+      position: relative;
+      height: vh(320);
+      overflow: hidden;
+      // border: 1px solid red;
+
+      .scroll-list {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: vh(6);
+        animation: scroll 6s linear infinite normal;
+      }
+
+      @keyframes scroll {
+        100% {
+          top: vh(-320)
         }
       }
     }

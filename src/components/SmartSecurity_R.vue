@@ -2,7 +2,20 @@
 import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
 import Video from "./Video.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
+let showTube = ref(false)
+let tubeDisabled = ref(false)
+
+function tubeClick() {
+  showTube.value = !showTube.value
+  API.tubes.showTube(showTube.value)
+  tubeDisabled.value = true
+  setTimeout(() => {
+    tubeDisabled.value = false
+  }, 1000)
+}
 //实时监控数据
 const monitorData = [
   {
@@ -33,6 +46,12 @@ const securityData = [
   { id: "03", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
   { id: "04", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
   { id: "05", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "01", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "02", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "03", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "04", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "05", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+
 ];
 const parkData = {
   Security: [
@@ -94,6 +113,8 @@ const parkData = {
           </div>
         </div>
       </div>
+      <div class="my-btn"><el-button type="primary" class="tube" @click="tubeClick" :disabled="tubeDisabled"
+          v-show="router.currentRoute.value.path === '/SmartSecurity'">{{ showTube ? '返回全貌' : '管线系统' }}</el-button></div>
     </Container>
     <Container title="实时监控">
       <ul class="monitor">
@@ -114,15 +135,20 @@ const parkData = {
           <span class="telephone">电话</span>
           <span class="location">位置</span>
         </li>
-        <li class="Information" v-for="(item, index) in securityData" :key="index" :style="{
-          background: 'url(./assets/2d/img/smartSecurity/3.png)',
-          backgroundSize: '100% 100%',
-        }">
-          <span class="id">{{ item.id }}</span>
-          <span class="name">{{ item.name }}</span>
-          <span class="telephone">{{ item.telephone }}</span>
-          <span class="location">{{ item.location }}</span>
-        </li>
+        <div class="Information-container">
+          <div class="scroll-list">
+            <li class="Information" v-for="(item, index) in securityData" :key="index" :style="{
+              background: 'url(./assets/2d/img/smartSchool/1.png)',
+              backgroundSize: '100% 100%',
+            }">
+              <span class="id">{{ item.id }}</span>
+              <span class="name">{{ item.name }}</span>
+              <span class="telephone">{{ item.telephone }}</span>
+              <span class="location">{{ item.location }}</span>
+            </li>
+          </div>
+        </div>
+
       </ul>
     </Container>
   </div>
@@ -138,7 +164,7 @@ const parkData = {
   top: vh(56);
 
   .parkSecurity {
-    height: 250px;
+    height: vh(200);
 
     .parkInformation {
       margin: vh(29) 0 vh(20) 0;
@@ -342,6 +368,26 @@ const parkData = {
         }
       }
     }
+
+    .my-btn {
+      width: vw(360);
+      height: vh(45);
+      position: relative;
+
+      .tube {
+        cursor: pointer;
+        position: absolute;
+        left: 100px;
+        border: 1px solid #2f9bff;
+        width: 100%;
+        height: vh(200);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #194c7d;
+      }
+    }
   }
 
   .monitor {
@@ -349,7 +395,7 @@ const parkData = {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin: vh(25) 0 vh(67) vw(5);
+    margin: vh(25) 0 vh(47) vw(5);
     gap: vw(9);
 
     li {
@@ -392,9 +438,7 @@ const parkData = {
   }
 
   .securityInformation {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+
     height: vh(270);
     font-size: rem(12);
     margin-right: vw(14);
@@ -425,6 +469,34 @@ const parkData = {
         padding-right: vw(12);
       }
     }
+
+    .Information-container {
+      position: relative;
+      height: vh(190);
+      overflow: hidden;
+
+      .scroll-list {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: vh(10);
+        animation: scroll 6s linear infinite normal;
+
+      }
+
+
+      @keyframes scroll {
+        100% {
+          top: vh(-190)
+        }
+      }
+    }
+
+
   }
 }
 </style>

@@ -11,6 +11,7 @@ import {
 import Container from "./Container.vue";
 import * as echarts from "echarts";
 
+
 //值班保卫信息数据
 const securityData = [
   { id: "01", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
@@ -18,6 +19,12 @@ const securityData = [
   { id: "03", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
   { id: "04", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
   { id: "05", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "01", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "02", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "03", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "04", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+  { id: "05", name: "李兆伟", telephone: "18987659990", location: "南门安保" },
+
 ];
 
 let datanv = ref([40, 30, 80, 30, 50, 20, 40, 20, 10]);
@@ -234,9 +241,9 @@ onUnmounted(() => {
     <Container title="园区概况">
       <div class="parkProfile">
         <img src="/assets/2d/img/smartSchool/园区图片.png" />
-        <P
-          >学校历来重视党的建设和思想政治工作，坚持以习近平新时代中国特色社会主义思想为指导，全面贯彻落实党的十九大和十九届历次全会精神，切实加强党对高校的全面领导，坚定不移落实全面从严治党主体责任，全面贯彻执行党的教育方针，落实立德树人根本任务，确保党的意志主张在高校落地生根，确保学校始终成为培养社会主义建设者和接班人的坚强阵地。</P
-        >
+        <P>
+          学校历来重视党的建设和思想政治工作，坚持以习近平新时代中国特色社会主义思想为指导，全面贯彻落实党的十九大和十九届历次全会精神，切实加强党对高校的全面领导，坚定不移落实全面从严治党主体责任，全面贯彻执行党的教育方针，落实立德树人根本任务，确保党的意志主张在高校落地生根，确保学校始终成为培养社会主义建设者和接班人的坚强阵地。
+        </P>
       </div>
     </Container>
     <Container title="预警分析">
@@ -250,20 +257,20 @@ onUnmounted(() => {
           <span class="telephone">电话</span>
           <span class="location">位置</span>
         </li>
-        <li
-          class="Information"
-          v-for="(item, index) in securityData"
-          :key="index"
-          :style="{
-            background: 'url(./assets/2d/img/smartSchool/1.png)',
-            backgroundSize: '100% 100%',
-          }"
-        >
-          <span class="id">{{ item.id }}</span>
-          <span class="name">{{ item.name }}</span>
-          <span class="telephone">{{ item.telephone }}</span>
-          <span class="location">{{ item.location }}</span>
-        </li>
+        <div class="Information-container">
+          <div class="scroll-list">
+            <li class="Information" v-for="(item, index) in securityData" :key="index" :style="{
+              background: 'url(./assets/2d/img/smartSchool/1.png)',
+              backgroundSize: '100% 100%',
+            }">
+              <span class="id">{{ item.id }}</span>
+              <span class="name">{{ item.name }}</span>
+              <span class="telephone">{{ item.telephone }}</span>
+              <span class="location">{{ item.location }}</span>
+            </li>
+          </div>
+        </div>
+
       </ul>
     </Container>
   </div>
@@ -277,52 +284,88 @@ onUnmounted(() => {
   position: absolute;
   left: vw(10);
   top: vh(56);
+
   .parkProfile {
     margin: vh(21) 0 vh(46) 0;
+
     img {
       width: vw(350);
       height: vh(100);
       margin: 0 auto;
     }
+
     p {
       margin-top: vh(16);
       font-size: rem(12);
       color: #b3b3b3;
     }
   }
+
   .warningAnalysis {
     height: vh(276);
     margin: vh(32) 0 0 0;
   }
+
   .securityInformation {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+
     height: vh(270);
     font-size: rem(12);
     margin-right: vw(14);
+
     li {
       height: vh(28);
       line-height: vh(28);
       text-align: center;
       display: flex;
+
       .id {
         flex: 1;
       }
+
       .name {
         flex: 2;
       }
+
       .telephone {
         flex: 3;
         text-align: start;
         padding-left: vw(27);
       }
+
       .location {
         flex: 3;
         text-align: end;
         padding-right: vw(12);
       }
     }
+
+    .Information-container {
+      position: relative;
+      height: vh(190);
+      overflow: hidden;
+
+      .scroll-list {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: vh(10);
+        animation: scroll 6s linear infinite normal;
+
+      }
+
+
+      @keyframes scroll {
+        100% {
+          top: vh(-190)
+        }
+      }
+    }
+
+
   }
 }
 </style>
