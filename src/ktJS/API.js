@@ -197,12 +197,13 @@ function loadGUI() {
  * 加载地面
  */
 function initFloor() {
-  const floorGeo = new Bol3D.PlaneGeometry(500, 500)
-  const floorMat = new Bol3D.MeshBasicMaterial({ color: 0x3c3a3b, side: Bol3D.DoubleSide })
-  const floor = new Bol3D.Mesh(floorGeo, floorMat);
+  const floorGeo = new Bol3D.PlaneGeometry(20000, 20000)
+  const floorM = CACHE.container.sceneList.floor.material.clone()
+  const floor = new Bol3D.Mesh(floorGeo, floorM);
   floor.rotation.x = -Math.PI / 2
-  floor.position.y = -0.1
+  floor.position.y = -1
   CACHE.container.attach(floor)
+  CACHE.container.sceneList.plane = floor
 }
 
 /**
@@ -353,10 +354,10 @@ function initInnerFloor(floor, duration = 800) {
       })
       // 双击进入教室
       popup.element.addEventListener("dblclick", () => {
-
         enterClassRoom(STATE.classRoomPopup[i].name)
         STATE.currentScene = STATE.classRoomPopup[i].name
       })
+
       container.attach(popup)
       STATE.popupList.push(popup)
     }
@@ -385,14 +386,22 @@ function removeAllPopup(name) {
 * @param {string} classRoomName 教室名
 */
 function enterClassRoom(classRoomName) {
+  new Bol3D.TWEEN.Tween(CACHE.container.ambientLight)
+    .to({
+      intensity: 5
+    }, 500)
+    .start()
+
   removeAllPopup()
   STATE.sceneList.mainBuilding.visible = false
 
   const classRoomModel = STATE.sceneList[classRoomName]
 
   classRoomModel.visible = true
-  CACHE.container.orbitCamera.position.set(-0.0485, 12.5571, 11.7318)
-  CACHE.container.orbitControls.target.set(-0.012, 2, -0.8)
+
+  const enterState = STATE.classRoomInfo.find(e => e.name == classRoomName).model.enterState
+  CACHE.container.orbitCamera.position.set(enterState.position.x, enterState.position.y, enterState.position.z)
+  CACHE.container.orbitControls.target.set(enterState.target.x, enterState.target.y, enterState.target.z)
 
 
   classRoom.hiddenRoof(classRoomName)
@@ -412,6 +421,7 @@ function enterClassRoom(classRoomName) {
  * 返回至初始界面
  */
 function backToOut() {
+  icon.show()
   STATE.outLineObjects = []
   STATE.sceneList.mainBuilding.traverse(child => {
     if (child.isMesh) {
@@ -529,22 +539,6 @@ const flyLines = {
 }
 
 
-
-
-const render = () => {
-  const singleFrameTime = STATE.clock.getDelta()
-  const elapsedTime = STATE.clock.getElapsedTime()
-
-
-  shader.peilou.shaderAnimate(singleFrameTime)
-  shader.school.shaderAnimate(elapsedTime)
-  flyLines.animation()
-  tubes.animation()
-
-  requestAnimationFrame(render);
-};
-
-
 /** 
 * 自定义鼠标右键双击事件
 */
@@ -576,6 +570,11 @@ function dbRightClick() {
             STATE.currentScene = 'mainBuilding'
 
           } else if (['309', '310', '311', '312', '316', '317', '318', '319'].includes(STATE.currentScene)) {
+            new Bol3D.TWEEN.Tween(CACHE.container.ambientLight)
+              .to({
+                intensity: 2.5
+              }, 500)
+              .start()
             STATE.currentScene = '3f'
             initInnerFloor('3f', 0)
             router.push("/")
@@ -589,6 +588,7 @@ function dbRightClick() {
     }
   })())
 }
+
 
 /**
  * 获取世界坐标的状态
@@ -610,22 +610,42 @@ const classRoom = {
   currentClassRoomName: '',
   info: {},
 
+  // 隐藏屋顶  窗户透明  外墙透明
   hiddenRoof: function (classRoomName) {
+    icon.show(false)
     const info = STATE.classRoomInfo.find(e => e.name === classRoomName)
     this.info = info
 
+
     STATE.sceneList[classRoomName].traverse(child => {
       if (child.isMesh) {
-        if (this.info.model.roof.includes(child.name)) {
+
+        CACHE.container.clickObjects.push(child)
+        if (info.model.roof.includes(child.name)) {
           child.visible = false
-        } else if (this.info.model.light.includes(child.name)) {
+        } else if (info.model.light.includes(child.name)) {
           child.material.transparent = true
           child.material.opacity = 0.5
+        } else if (info.model.wall.includes(child.name)) {
+          child.material.transparent = true
+          child.material.opacity = 0.5
+        } else if (info.model.window.includes(child.name)) {
+          child.material.transparent = true
+          child.material.opacity = 0.1
+        } else if (classRoomName == '309' && info.model.table.includes(child.name)) {
+          if (['309jiaoshi23_1', '309jiaoshi24_1'].includes(child.name)) {
+            child.userData.rgb = 0.1
+            child.material.color.set(0x161616)
+          } else {
+            child.userData.rgb = 0.2
+            child.material.color.set(0x323232)
+          }
         }
       }
     })
   },
 
+  // 窗帘
   curtain: function (isOpen) {
     STATE.sceneList[this.currentClassRoomName].traverse(child => {
       if (child.isMesh) {
@@ -640,7 +660,7 @@ const classRoom = {
     })
   },
 
-
+  // 屏幕
   screen: function (isOpen) {
     STATE.sceneList[this.currentClassRoomName].traverse(child => {
       if (child.isMesh) {
@@ -653,20 +673,38 @@ const classRoom = {
     })
   },
 
+  // 亮度
   brightness: function (val) {
     STATE.sceneList[this.currentClassRoomName].traverse(child => {
       if (child.isMesh) {
         if (!this.info.model.screen.includes(child.name)) {
-          child.material.color.r = val * 0.01
-          child.material.color.g = val * 0.01
-          child.material.color.b = val * 0.01
+          if (child.userData.rgb) {
+            child.material.color.r = val * 0.01 * child.userData.rgb
+            child.material.color.g = val * 0.01 * child.userData.rgb
+            child.material.color.b = val * 0.01 * child.userData.rgb
+          } else {
+            child.material.color.r = val * 0.01
+            child.material.color.g = val * 0.01
+            child.material.color.b = val * 0.01
+          }
         }
       }
     })
   },
 
-  temperature: function (val) {
-
+  // 门
+  door: function (isOpen) {
+    STATE.sceneList[this.currentClassRoomName].traverse(child => {
+      if (child.isMesh) {
+        if (this.info.model.door.includes(child.name)) {
+          new Bol3D.TWEEN.Tween(child.rotation)
+            .to({
+              z: isOpen ? -Math.PI / 2 : 0
+            }, 500)
+            .start()
+        }
+      }
+    })
   }
 }
 
@@ -693,6 +731,12 @@ const tubes = {
 
     if (isTubeShow) {
       STATE.currentScene = 'tube'
+      new Bol3D.TWEEN.Tween(STATE.sceneList.plane.position)
+        .to({
+          y: -25
+        }, 100)
+        .start()
+
       cameraAnimation({
         cameraState: STATE.showTubeState, callback: (() => {
           CACHE.container.orbitControls.maxPolarAngle = Math.PI
@@ -719,7 +763,11 @@ const tubes = {
       }
     } else {
 
-
+      new Bol3D.TWEEN.Tween(STATE.sceneList.plane.position)
+        .to({
+          y: -1
+        }, 500)
+        .start()
       cameraAnimation({
         cameraState: STATE.initialState, callback: (() => {
           CACHE.container.orbitControls.maxPolarAngle = 1.4
@@ -800,22 +848,94 @@ function edge(model, color = 0x113a5f) {
 
 
 /**
- * 加载icon
+ * 图标
  */
-function initIcon() {
-  const icon1 = new Bol3D.POI.Icon({
-    position: [0, 20, 0],
-    url: './assets/3d/img/2.png',
-    scale: [15 / 200, 15 / 200],
-    color: 0xff8300,
-    sizeAttenuation: false,
-    publicPath: '',
-    cb: () => {
-      // dosomething...
+const icon = {
+  iconMoveList: [],
+
+  /**
+   * 显示隐藏
+   */
+  show(boo = true) {
+    STATE.sceneList.icon.visible = boo
+  },
+
+  /**
+   * 加载icon
+   */
+  initIcon() {
+    STATE.sceneList.icon = new Bol3D.Group()
+
+    for (let i = 0; i < STATE.iconList.length; i++) {
+      const item = STATE.iconList[i]
+
+      if (item.name.includes('监控')) {
+        const icon = new Bol3D.POI.Icon({
+          position: [item.position[0], item.position[1], item.position[2]],
+          url: './assets/3d/img/3.png',
+          scale: [0.025, 0.025],
+          color: 0x1296db,
+          sizeAttenuation: false
+        })
+        icon.name = item.name
+        
+        // icon.renderOrder = -1
+        icon.material.alphaToCoverage = true
+        STATE.bloomList.push(icon)
+        STATE.sceneList.icon.add(icon)
+        STATE.outClickObjects.push(icon)
+
+      } else {
+        const icon = new Bol3D.POI.Icon({
+          position: [item.position[0], item.position[1], item.position[2]],
+          url: './assets/3d/img/2.png',
+          scale: [0.045, 0.045],
+          color: 0xff8300,
+          sizeAttenuation: false
+        })
+        icon.name = item.name
+        // icon.renderOrder = -1
+        icon.material.alphaToCoverage = true
+        STATE.bloomList.push(icon)
+        STATE.sceneList.icon.add(icon)
+        if (i === 0) this.iconMoveList.push(icon)
+
+        const text = new Bol3D.POI.Text({
+          position: [item.position[0], item.position[1] + 7, item.position[2]],
+          value: [item.name],
+          color: '#ffffff',
+          lineHeight: 40,
+          lineSpacing: 0,
+          topSpacing: 5,
+          textAlign: 'center',
+          scale: .0003,
+          background: './assets/3d/img/4.png',
+          backgroundColor: '',
+          sizeAttenuation: false,
+          publicPath: '',
+          bgScale: [1.5, 2.5],
+          bgOffset: [0, -0.05]
+        })
+        text.name = item.name
+        text.renderOrder = -1
+        text.material.alphaToCoverage = true
+        STATE.bloomList.push(text)
+        STATE.sceneList.icon.add(text)
+      }
     }
-  })
-  container.attach(icon1)
-  console.log('icon1: ', icon1);
+
+    container.attach(STATE.sceneList.icon)
+  },
+
+  /**
+   * icon动画
+   */
+  animation(elapsedTime) {
+    this.iconMoveList.forEach(e => {
+      e.position.y += Math.sin(elapsedTime * 10) / 10
+    })
+  }
+
 }
 
 /**
@@ -840,6 +960,155 @@ function mergedMesh(models) {
   return merged
 }
 
+/**
+ * 设置模型位置(position)，旋转(rotation)，缩放(scale),有该属性的物体亦可
+ * @param {object} mesh 待操作模型
+ */
+function setModelPosition(mesh) {
+  const controls = CACHE.container.transformControl
+  const gui = new dat.GUI()
+  const options = {
+    transformModel: "translate"
+  }
+  gui.add(options, 'transformModel', ["translate", 'rotate', 'scale']).onChange(val => controls.setMode(val))
+  const positionX = gui.add(mesh.position, 'x').onChange(val => mesh.position.x = val).name('positionX')
+  const positionY = gui.add(mesh.position, 'y').onChange(val => mesh.position.y = val).name('positionY')
+  const positionZ = gui.add(mesh.position, 'z').onChange(val => mesh.position.z = val).name('positionZ')
+  const rotationX = gui.add(mesh.rotation, 'x').step(0.01).onChange(val => mesh.rotation.x = val).name('rotationX')
+  const rotationY = gui.add(mesh.rotation, 'y').step(0.01).onChange(val => mesh.rotation.y = val).name('rotationY')
+  const rotationZ = gui.add(mesh.rotation, 'z').step(0.01).onChange(val => mesh.rotation.z = val).name('rotationZ')
+  const scaleX = gui.add(mesh.scale, "x").step(0.01).onChange(val => mesh.scale.x = val).name('scaleX')
+  const scaleY = gui.add(mesh.scale, "y").step(0.01).onChange(val => mesh.scale.y = val).name('scaleY')
+  const scaleZ = gui.add(mesh.scale, "z").step(0.01).onChange(val => mesh.scale.z = val).name('scaleZ')
+  controls.attach(mesh)
+  controls.addEventListener("change", (e) => {
+    positionX.setValue(mesh.position.x)
+    positionY.setValue(mesh.position.y)
+    positionZ.setValue(mesh.position.z)
+    rotationX.setValue(mesh.rotation.x)
+    rotationY.setValue(mesh.rotation.y)
+    rotationZ.setValue(mesh.rotation.z)
+    scaleX.setValue(mesh.scale.x)
+    scaleY.setValue(mesh.scale.y)
+    scaleZ.setValue(mesh.scale.z)
+  })
+}
+
+/**
+ * 加载3d弹窗
+ * @param {Number} type 类型名代号 1-门禁 2-监控 3-保卫处
+ * @param {String} name 监控名字
+ */
+function initPopup3d(type, name) {
+  removeAllPopup()
+  let typeName = ''
+  let value = ``
+  if (type === 1) { typeName = '门禁' }
+  else if (type === 2) { typeName = '监控' }
+  else if (type === 3) { typeName = '保卫处' }
+
+  if (typeName) {
+    const arr = STATE.popup3DData.find(e => e.name === typeName)
+    if (type === 2) { // 监控
+      const monitorInfo = arr.value.find(e2 => e2.name === name)
+      if (monitorInfo) {
+        value = `<video style="width: 100%; height: 97%;" autoplay loop src="${monitorInfo.videoUrl}"></video>`
+        const popup3D = new Bol3D.POI.Popup3D({
+          value: `
+            <div style="
+              margin:0;
+              width: 14.55vw;
+              height:23vh;
+              padding: 4% 0 0 0;
+              float: left;
+              background: url('./assets/3d/img/6.png') center / 100% 100%;
+              color: #ffffff;
+            ">
+            ${value}
+            </div>
+          `,
+          position: [monitorInfo.position3D.x, monitorInfo.position3D.y, monitorInfo.position3D.z],
+          className: 'popup3dclass bg6',
+          scale: [0.1, 0.1, 0.1],
+          closeVisible: 'visible'
+        })
+
+        popup3D.name = monitorInfo.name
+        CACHE.container.attach(popup3D)
+        STATE.popupList.push(popup3D)
+
+        const cameraState = {
+          position: { x: monitorInfo.position3D.x + 40, y: monitorInfo.position3D.y + 40, z: monitorInfo.position3D.z + 40 },
+          target: monitorInfo.position3D
+        }
+        cameraAnimation({cameraState})
+      }
+
+    } else { // 门禁 保卫处
+      for (let i = 0; i < arr.value.length; i++) {
+        if (type === 1) {
+          value = `<p style='margin-bottom: 1.25rem;'>${typeName}</p>`
+          value += `<p style='margin-bottom: 1rem;'>位置：${arr.value[i].position}</p>`
+          value += `<p style='margin-bottom: 1rem;'>门禁状态：${arr.value[i].state}</p>`
+          value += `<p style='margin-bottom: 1rem;'>今日通行人数：${arr.value[i].value}</p>`
+        } else if (type === 3) {
+          value = `<p style='margin-bottom: 1.25rem;'>${typeName}</p>`
+          value += `<p style='margin-bottom: 1rem;'>位置：${arr.value[i].position}</p>`
+          value += `<p style='margin-bottom: 1rem;'>值班人员：${arr.value[i].person}</p>`
+        }
+
+        const popup3D = new Bol3D.POI.Popup3D({
+          value: `
+            <div style="
+              margin:0;
+              width: 20vw;
+              height:20vh;
+              padding: 0 0 0 2.6vw;
+              font-size: 1.25rem;
+              float: left;
+              background: url('./assets/3d/img/7.png') center / 100% 100%;
+              color: #ffffff;
+            ">
+            ${value}
+            </div>
+          `,
+          position: [arr.value[i].position3D.x, arr.value[i].position3D.y, arr.value[i].position3D.z],
+          className: 'popup3dclass bg7',
+          scale: [0.08, 0.08, 0.08],
+          closeVisible: 'visible'
+        })
+
+        popup3D.name = arr.value[i].name
+        CACHE.container.attach(popup3D)
+        STATE.popupList.push(popup3D)
+      }
+    }
+
+
+    setTimeout(() => {
+      const dom = document.getElementsByClassName('popup3dclass')
+      if (dom.length) {
+        dom[0].parentElement.parentElement.style.zIndex = 20
+      }
+    }, 500)
+  }
+}
+
+
+const render = () => {
+  const singleFrameTime = STATE.clock.getDelta()
+  const elapsedTime = STATE.clock.getElapsedTime()
+
+
+  shader.peilou.shaderAnimate(singleFrameTime)
+  shader.school.shaderAnimate(elapsedTime)
+  flyLines.animation()
+  tubes.animation()
+  icon.animation(elapsedTime)
+
+  requestAnimationFrame(render);
+};
+
 export const API = {
   loadGUI,
   initFloor,
@@ -848,7 +1117,8 @@ export const API = {
   dbRightClick,
   getWorldState,
   edge,
-  initIcon,
+  initPopup3d,
+  icon,
   tubes,
   shader,
   classRoom,
