@@ -45,6 +45,57 @@ const classRoomPopup = [{
   name: '310',
   position: [-51, 17, -56.3]
 }]
+
+// 弹窗数据
+const popup3DData = [{
+  name: '门禁',
+  value: [{
+    position3D: { x: 128, y: 20, z: -16 },
+    name: '门禁1',
+    position: '南门',
+    state: '在线',
+    value: '2845'
+  }, {
+    position3D: { x: -117, y: 20, z: 17 },
+    name: '门禁1',
+    position: '南门',
+    state: '在线',
+    value: '2845'
+  }]
+}, {
+  name: '监控',
+  value: [{
+    position3D: { x: 129, y: 16, z: 2 },
+    name: '监控1',
+    videoUrl: './assets/2d/video/monitor4.mp4'
+  }, {
+    position3D: { x: 31, y: 21, z: 16 },
+    name: '监控2',
+    videoUrl: './assets/2d/video/monitor4.mp4'
+  }, {
+    position3D: { x: -80, y: 22, z: 44 },
+    name: '监控3',
+    videoUrl: './assets/2d/video/monitor4.mp4'
+  }, {
+    position3D: { x: -116, y: 16, z: 5 },
+    name: '监控4',
+    videoUrl: './assets/2d/video/monitor4.mp4'
+  }]
+}, {
+  name: '保卫处',
+  value: [{
+    position3D: { x: -64, y: 25, z: 37 },
+    name: '保卫处1',
+    position: '东门',
+    person: '张伟'
+  }, {
+    position3D: { x: -26, y: 10, z: -34 },
+    name: '保卫处2',
+    position: '西门',
+    person: '李四'
+  }]
+}]
+
 // 装弹窗实例的
 const popupList = []
 
@@ -67,6 +118,24 @@ const floorList = [
     model: ['wuding_1', 'wuding_2']
   }]
 
+
+// 图标
+const iconList = [
+  { name: '教学楼1', position: [-56, 22, -54] },
+  { name: '教学楼2', position: [-111, 55, 44] },
+  { name: '教学楼3', position: [-119, 49, -29] },
+  { name: '教学楼4', position: [82, 22, -42] },
+  { name: '教学楼5', position: [-13, 22, 44] },
+  { name: '教学楼6', position: [-51, 22, 44] },
+  { name: '教学楼7', position: [82, 22, 17] },
+  { name: '教学楼8', position: [-6, 23, -13] },
+  { name: '教学楼9', position: [1, 18, -51] },
+  { name: '监控1', position: [129, 16, 2] },
+  { name: '监控2', position: [31, 21, 16] },
+  { name: '监控3', position: [-80, 22, 44] },
+  { name: '监控4', position: [-116, 16, 5] },
+]
+
 // 加载的场景列表
 const sceneList = {
   mainBuilding: new Bol3D.Group(), // 交互的主楼
@@ -80,7 +149,9 @@ const sceneList = {
   carLine: null, // 车流飞线
   schoolEdge: null, //学校边框
   mainBuildingEdge: null, //主楼边框
-  tube: null // 管道
+  tube: null, // 管道
+  icon: null, //图标
+  plane: null // 配合雾的地板
 }
 
 // 教室信息
@@ -93,7 +164,15 @@ const classRoomInfo = [{
     curtainScale: [82, 180],
     screen: ['309jiaoshi02_2', '309jiaoshi09_3'],
     frontDoor: ['309jiaoshi06'],
-    backDoor: ['309jiaoshi07']
+    backDoor: ['309jiaoshi07'],
+    window: ['309jiaoshi01_2'],
+    enterState: {
+      position: { x: 0.35132133540255045, y: 2.5964947672572083, z: 7.7359664157137775 },
+      target: { x: 0.4627314508596592, y: 2, z: 0.9115881241332402 }
+    },
+    wall: ['waiqiang_1', '309jiaoshi00_1'],
+    table: ['309jiaoshi24_2', '309jiaoshi23_2', '309jiaoshi23_1', '309jiaoshi24_1'],
+    door: ['309jiaoshi06_1', '309jiaoshi06_2', '309jiaoshi06_3', '309jiaoshi06_4', '309jiaoshi07_1', '309jiaoshi07_2', '309jiaoshi07_3', '309jiaoshi07_4']
   }
 }, {
   name: '310',
@@ -104,7 +183,14 @@ const classRoomInfo = [{
     curtainScale: [76, 167],
     screen: ['310jiaoshi02_2', '310jiaoshi09_3'],
     frontDoor: ['310jiaoshi06'],
-    backDoor: ['310jiaoshi07']
+    backDoor: ['310jiaoshi07'],
+    window: ['310jiaoshi01_2'],
+    enterState: {
+      position: { x: 4.193204692975613, y: 2.5169714905708562, z: 3.893859200170662 },
+      target: { x: 1.9489241309363219, y: 2, z: 1.2357259033772325 }
+    },
+    wall: ['waiqiang_1', '310jiaoshi00_1'],
+    door: ['310jiaoshi06_1', '310jiaoshi06_2', '310jiaoshi06_3', '310jiaoshi06_4', '310jiaoshi07_1', '310jiaoshi07_2', '310jiaoshi07_3', '310jiaoshi07_4']
   }
 }]
 
@@ -335,6 +421,7 @@ export const STATE = {
   innerClickObjects,  // 内场景可点击的物体
   currentScene,  // 当前场景
   floorList, // 楼层数组
+  popup3DData, // 3d弹窗数据
   popupList, // 弹窗数组
   sceneList, // 场景模型数组
   classRoomPopup,  // 教室弹窗
@@ -342,5 +429,6 @@ export const STATE = {
   flyLineConfig, // 场景流线
   bloomList, // 辉光数组
   showTubeState, // 显示管道的相机设置
+  iconList, // 图标
   temp
 }

@@ -22,7 +22,7 @@ const equipmentControl = ref({
   curtain: true,
   screen: true,
   brightness: 100,
-  temperature: 26
+  door: 26
 })
 
 if (classRoomName) {
@@ -36,12 +36,12 @@ if (classRoomName) {
       if (newData.curtain != oldData.curtain) API.classRoom.curtain(newData.curtain)
       if (newData.screen != oldData.screen) API.classRoom.screen(newData.screen)
       if (newData.brightness != oldData.brightness) API.classRoom.brightness(newData.brightness)
-      if (newData.temperature != oldData.temperature) API.classRoom.temperature(newData.temperature)
+      if (newData.door != oldData.door) API.classRoom.door(newData.door)
     } else {
       // API.classRoom.curtain(newData.curtain)
       API.classRoom.screen(newData.screen)
       API.classRoom.brightness(newData.brightness)
-      API.classRoom.temperature(newData.temperature)
+      API.classRoom.door(newData.door)
     }
   }, {
     immediate: true,
@@ -100,6 +100,7 @@ const monitorData = [
         <div class="button">
           <div><span>窗帘</span> <el-switch v-model="equipmentControl.curtain"></el-switch></div>
           <div><span>屏幕</span> <el-switch v-model="equipmentControl.screen"></el-switch></div>
+          <div><span>开门</span> <el-switch v-model="equipmentControl.door"></el-switch></div>
         </div>
         <div class="slider">
           <div style="display: flex">
@@ -107,13 +108,6 @@ const monitorData = [
             <div>
               <p>亮度</p>
               <el-slider v-model="equipmentControl.brightness" :min="5" :max="100" :show-tooltip="false"></el-slider>
-            </div>
-          </div>
-          <div style="display: flex">
-            <img :src="'./assets/2d/img/smartEducationInner/8.png'" class="icon" />
-            <div>
-              <p>温度</p>
-              <el-slider v-model="equipmentControl.temperature" :min="-10" :max="45" :show-tooltip="false"></el-slider>
             </div>
           </div>
         </div>

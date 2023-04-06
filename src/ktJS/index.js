@@ -32,7 +32,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         // minDistance: 0,
         maxDistance: 1000,
         maxPolarAngle: 90 * Math.PI / 180,
-        minPolarAngle: 0  * Math.PI / 180,
+        minPolarAngle: 0 * Math.PI / 180,
         enableDamping: true,
         dampingFactor: 0.5,
       }
@@ -53,13 +53,15 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       contrast: 1 // 对比度
     },
     background: {
-      type: 'panorama',
-      value: ['/img/skybox2.jpg'],
-      options: {
-        scale: 1,
-        rotation: [0, Math.PI / 2, 0],
-        fog: false, // 天空盒受雾影响 默认值为false
-      }
+      // type: 'panorama',
+      // value: ['/img/skybox2.jpg'],
+      // options: {
+      //   scale: 1,
+      //   rotation: [0, Math.PI / 2, 0],
+      //   fog: false, // 天空盒受雾影响 默认值为false
+      // }
+      type: 'color',
+      value: '#0f1b49'
     },
     modelUrls: [
       '/model/xxshu.glb',
@@ -87,10 +89,10 @@ export const sceneOnLoad = ({ domElement, callback }) => {
     // hdrUrls: ['/hdr/HDR.hdr'],
     enableShadow: true,
     antiShake: false,
-    // fog: {
-    //   color: '#010108',
-    //   intensity: 0.00272
-    // },
+    fog: {
+      color: '#0f1b49',
+      intensity: 0.0002
+    },
     toneMapping: {
       toneMappingExposure: 0.596
     },
@@ -159,7 +161,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
               child.position.set(worldState.position.x, worldState.position.y, worldState.position.z)
               child.scale.set(worldState.scale.x, worldState.scale.y, worldState.scale.z)
               child.quaternion.set(worldState.quaternion.x, worldState.quaternion.y, worldState.quaternion.z, worldState.quaternion.w)
-
+              child.material.map = null
+              child.material.color.set(4, 12, 42)
               STATE.sceneList.floor = child.clone()
 
               child.visible = false
@@ -312,7 +315,6 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       CACHE.container.clickObjects = STATE.outClickObjects
       CACHE.container.loadingBar.style.visibility = 'hidden'
 
-
       // 学校主体边框 + 辉光
       const schoolEdge = API.edge(STATE.sceneList.school)
       schoolEdge.visible = false
@@ -321,31 +323,27 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       schoolEdge.children.forEach(e => {
         STATE.bloomList.push(e)
       })
-      
+
       // 主楼主体边框 + 辉光
       const mainBuildingEdge = API.edge(STATE.sceneList.mainBuilding)
       mainBuildingEdge.visible = false
       CACHE.container.attach(mainBuildingEdge)
       STATE.sceneList.mainBuildingEdge = mainBuildingEdge
       mainBuildingEdge.children.forEach(e => {
-        if(e.name != 'weiqiang')
-        STATE.bloomList.push(e)
+        if (e.name != 'weiqiang')
+          STATE.bloomList.push(e)
       })
 
 
       // icon
-      API.initIcon()
+      API.icon.initIcon()
 
 
-      // API.loadGUI()
-      // API.initFloor()
+      API.loadGUI()
+      API.initFloor()
 
       API.shader.peilou.initShader()
       API.flyLines.initFlyLines()
-      // API.tubes.showTube(true)
-
-
-
 
       STATE.bloomList.forEach(e => {
         CACHE.container.addBloom(e)
@@ -359,8 +357,8 @@ export const sceneOnLoad = ({ domElement, callback }) => {
 
   const events = new Bol3D.Events(container)
   events.ondbclick = (e) => {
-
     if (e.objects.length) {
+      console.log(e.objects[0].object);
 
 
       const firstObject = e.objects[0].object
@@ -369,11 +367,15 @@ export const sceneOnLoad = ({ domElement, callback }) => {
       if (firstObject.userData.type === '主楼' && STATE.currentScene === 'out') {
         STATE.currentScene = 'mainBuilding'
         API.initMainBuilding()
+        API.icon.show(false)
 
         // 在主楼点到具体单楼层
       } else if (firstObject.userData.type === '主楼' && STATE.currentScene === 'mainBuilding') {
         STATE.currentScene = firstObject.userData.floor
         API.initInnerFloor(firstObject.userData.floor)
+
+      } else if (firstObject.name.includes('监控')) {
+        API.initPopup3d(2, firstObject.name)
       }
     }
   }

@@ -27,7 +27,7 @@ router.push("/SmartSchool");
   height: 100vh;
   width: 100vw;
   z-index: 2;
-  background: url("/assets/2d/img/1.png");
+  /* background: url("/assets/2d/img/1.png"); */
   background-size: 100% 100%;
 }
 </style>

@@ -12,6 +12,16 @@
   z-index: 10 !important;
 }
 
+.bg6 .popup-close{
+  top: 10% !important;
+  right: 5% !important;
+}
+
+.bg7 .popup-close{
+  top: 20% !important;
+  right: 13% !important;
+}
+
 ul{
   margin: 0;
   padding: 0;
