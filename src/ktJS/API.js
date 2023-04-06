@@ -999,7 +999,7 @@ function setModelPosition(mesh) {
  * @param {Number} type 类型名代号 1-门禁 2-监控 3-保卫处
  * @param {String} name 监控名字
  */
-function initPopup3d(type, name) {
+function initPopup3d(type, name = '监控1') {
   removeAllPopup()
   let typeName = ''
   let value = ``
@@ -1081,6 +1081,14 @@ function initPopup3d(type, name) {
         popup3D.name = arr.value[i].name
         CACHE.container.attach(popup3D)
         STATE.popupList.push(popup3D)
+      }
+
+      if(arr.value.length) {
+        const cameraState = {
+          position: { x: arr.value[0].position3D.x + 40, y: arr.value[0].position3D.y + 40, z: arr.value[0].position3D.z + 40 },
+          target: arr.value[0].position3D
+        }
+        cameraAnimation({cameraState})
       }
     }
 
