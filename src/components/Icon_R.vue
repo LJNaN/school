@@ -7,7 +7,7 @@
           background: `url(${icon.url})`,
           backgroundSize: '100% 100%',
         }"></div>
-        <span>{{ icon.name }}</span>
+        <p>{{ icon.name }}</p>
       </li>
     </ul>
 
@@ -31,10 +31,10 @@ const iconTitle = [
 <style scoped lang ='scss'>
 .iconTitle {
   pointer-events: all;
-  width: vw(100);
+  width: vw(110);
   position: absolute;
   top: vh(100);
-  right: vw(424);
+  right: vw(380);
 
 
   li {
@@ -47,7 +47,7 @@ const iconTitle = [
       height: vh(30);
     }
 
-    span {
+    p {
       display: flex;
       align-items: center;
       margin-left: vw(16);

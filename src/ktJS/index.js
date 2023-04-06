@@ -342,10 +342,12 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         STATE.sceneList.icon.children.forEach(e => {
           if (e.type == 'Icon') {
             e.renderOrder = 1
+            e.material.needsUpdate = true
             e.material.alphaToCoverage = true
+            e.material.needsUpdate = true
           }
         })
-      }, 1000);
+      }, 5000);
 
 
       API.loadGUI()

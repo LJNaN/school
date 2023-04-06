@@ -3,6 +3,7 @@ import { reactive, ref, toRefs, onBeforeMount, onMounted } from "vue";
 import Container from "./Container.vue";
 import Video from "./Video.vue";
 import { useRouter } from "vue-router";
+import { API } from '@/ktJS/API'
 const router = useRouter();
 
 let showTube = ref(false)
@@ -113,8 +114,8 @@ const parkData = {
           </div>
         </div>
       </div>
-      <div class="my-btn"><el-button type="primary" class="tube" @click="tubeClick" :disabled="tubeDisabled"
-          v-show="router.currentRoute.value.path === '/SmartSecurity'">{{ showTube ? '返回全貌' : '管线系统' }}</el-button></div>
+      <el-button type="primary" plain class="tube" @click="tubeClick" :disabled="tubeDisabled"
+        v-show="router.currentRoute.value.path === '/SmartSecurity'">{{ showTube ? '返回全貌' : '管线系统' }}</el-button>
     </Container>
     <Container title="实时监控">
       <ul class="monitor">
@@ -368,26 +369,14 @@ const parkData = {
         }
       }
     }
+  }
 
-    .my-btn {
-      width: vw(360);
-      height: vh(45);
-      position: relative;
-
-      .tube {
-        cursor: pointer;
-        position: absolute;
-        left: 100px;
-        border: 1px solid #2f9bff;
-        width: 100%;
-        height: vh(200);
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #194c7d;
-      }
-    }
+  .tube {
+    position: fixed;
+    top: 11vh;
+    color: #fff;
+    right: 22vw;
+    background-color: #409eff55;
   }
 
   .monitor {
