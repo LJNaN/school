@@ -349,7 +349,7 @@ export const sceneOnLoad = ({ domElement, callback }) => {
         })
       }, 5000);
 
-
+      API.showTargetPositon()
       API.loadGUI()
       API.initFloor()
 

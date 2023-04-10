@@ -878,7 +878,7 @@ const icon = {
           sizeAttenuation: false
         })
         icon.name = item.name
-        
+
         // icon.renderOrder = -1
         icon.material.alphaToCoverage = true
         STATE.bloomList.push(icon)
@@ -1041,7 +1041,7 @@ function initPopup3d(type, name) {
           position: { x: monitorInfo.position3D.x + 40, y: monitorInfo.position3D.y + 40, z: monitorInfo.position3D.z + 40 },
           target: monitorInfo.position3D
         }
-        cameraAnimation({cameraState})
+        cameraAnimation({ cameraState })
       }
 
     } else { // 门禁 保卫处
@@ -1109,6 +1109,31 @@ const render = () => {
   requestAnimationFrame(render);
 };
 
+
+
+/**
+ * 显示orbitCamera的position和orbitControls的target
+ */
+function showTargetPositon() {
+  let mypt = {
+    position: "",
+    target: ""
+  }
+  const gui = new dat.GUI()
+  const guiPosition = gui.add(mypt, "position")
+  const guiTarget = gui.add(mypt, "target")
+
+  container.orbitControls.addEventListener("end", () => {
+    const position = container.orbitCamera.position
+    const pString = '{x:' + position.x + ",y:" + position.y + ',z:' + position.z + "}"
+    guiPosition.setValue(pString)
+    const target = container.orbitControls.target
+    const tString = '{x:' + target.x + ",y:" + target.y + ',z:' + target.z + "}"
+    guiTarget.setValue(tString)
+  })
+}
+
+
 export const API = {
   loadGUI,
   initFloor,
@@ -1123,5 +1148,6 @@ export const API = {
   shader,
   classRoom,
   flyLines,
-  render
+  render,
+  showTargetPositon
 }
